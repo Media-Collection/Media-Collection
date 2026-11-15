@@ -87,12 +87,15 @@
 
                         for(let pag = Number(pag_num); pag <= pag_num+count_button && pag <= max_pag; pag++){
                             if(pag == pag_num){
-                                console.log("Epa")
                                 page_buttons += `<button id="${pag}" onclick="page_change(this.id)" class="selected"> ${pag} </button>`
                             }
                             else{
                                 page_buttons += `<button id="${pag}" onclick="page_change(this.id)"> ${pag} </button>`
                             }
+                        }
+
+                        if((pag_num + count_button) < max_pag){
+                            page_buttons += `<button id="${max_pag}" onclick="page_change(this.id)" style="margin-left: 30px"> ${max_pag} </button>`
                         }
                         page_button.innerHTML = page_buttons;
                     })
