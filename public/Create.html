@@ -89,34 +89,11 @@
           console.log("resposta: ", resposta);
 
           if (resposta.ok) {
-            // Coleta de id do novo usuário para criar a coleção.
-            fetch("/usuarios/autenticar", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify({
-                emailServer: email,
-                senhaServer: senha
-              })
-            })
-              .then(function (resposta) {
-                console.log("ESTOU NO THEN DO autenticar()!");
-
-                if (resposta.ok) {
-                  resposta.json().then(function (json) {
-
-                    // Cadastrando coleção
-                    cadastrar_colecao(json.id);
-
-                  });
-                } else {
-                  throw new Error("Erro ao realizar autenticação!");
-                }
-              })
-              .catch(function (erro) {
-                console.log(erro);
-              });
+            error_message.innerHTML = '<b class="sucesso"> Cadastro realizado com sucesso! Redirecionando para tela de Login... </b>';
+            
+          setTimeout(() => {
+            window.location = "login.html";
+          }, 2000);
 
           } else {
             throw new Error("Email já cadastrado");
@@ -129,7 +106,7 @@
     }
   }
 
-  function cadastrar_colecao(id) {
+/*   function cadastrar_colecao(id) {
     fetch("/usuarios/cadastrar_colecao", {
       method: "POST",
       headers: {
@@ -157,7 +134,7 @@
       .catch(function (erro) {
         console.log(erro);
       });
-  }
+  } */
 </script>
 
 </html>
