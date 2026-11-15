@@ -117,10 +117,16 @@ body{
 }
 
 .center{
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.center_column{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .right{

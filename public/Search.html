@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,64 +12,113 @@
     <link href="https://googleapis.com" rel="stylesheet">
     <title>Search</title>
 </head>
+
 <body onload="search(), validarSessaoFilm()" class="search_main">
-            <div class="button_line">
-            <div id="left" class="left">
-                <a href="index.html"><img class="logo" src="img\Logo v2.png" alt="logo"><a href="Home.html"></a>
+    <div class="button_line">
+        <div id="left" class="left">
+            <a href="index.html"><img class="logo" src="img\Logo v2.png" alt="logo"><a href="Home.html"></a>
                 <a href="Search.html"><button class="selected attached_button">Films</button></a>
-<!--                 <a href="collection.html"><button class="attached_button">My Collection</button></a>
+                <!--                 <a href="collection.html"><button class="attached_button">My Collection</button></a>
                 <button class="attached_button">Dashboard</button> -->
-            </div>
-            <div class="right">
-                <a href="login.html"><button class="basic_button"> Sign in </button></a>
-                <a href="Create.html"><button class="create_account"> Create Account </button></a>
-            </div>
-            <input onkeyup="(event.key === 'Enter') ? search() : undefined;" type="text" id="ipt_filme" placeholder="Type your movie">
-            </div>
         </div>
-        <section class="center">
-            <main class="movie_box" id="movie_box">
-                <div class="poster_grid" id="msg">
-                </div>
-            </main>
-        </section>
+        <div class="right">
+            <a href="login.html"><button class="basic_button"> Sign in </button></a>
+            <a href="Create.html"><button class="create_account"> Create Account </button></a>
+        </div>
+        <input onkeyup="(event.key === 'Enter') ? (search(), pag_num = 1) : undefined;" type="text" id="ipt_filme"
+            placeholder="Type your movie">
+    </div>
+    </div>
+    <section class="center_column">
+        <main class="movie_box" id="movie_box">
+            <div class="poster_grid" id="msg">
+            </div>
+        </main>
+        <div id="page_button"></div>
+    </section>
+    
+    </div>
+    
 
     <!-- <button onclick="buscar()">Procurar o Filme</button><br><br> -->
 </body>
 <script>
-    function search(){
+    const max_filmes = 14;
+    var pag_num = 1;
+
+    function search() {
         var search = ipt_filme.value;
 
         fetch("/movies/pesquisar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          searchServer: search,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                searchServer: search,
+            })
         })
-      })
 
-      .then((resposta) => {
-        if (resposta.ok){
-            resposta.json().then(json => {
-            msg.innerHTML = '';
-            for(let i = 0; i < json.length; i++){
-                //idFilme, path, titulo, dt_lancamento
-                let data = json[i].dt_lancamento
-                console.log(data)
-                console.log(':)')
-                console.log(json[i].idFilme)
-                msg.innerHTML += `<div class="movie_div" id="${json[i].idFilme}"> <img class="poster" src="https://image.tmdb.org/t/p/original/${json[i].path}"> <label class="movie_title">${json[i].titulo}</label> <label class="year">(${data.slice(0, 4)})</label> </div>`
-            }
-        })
-        }
-        else{
-            console.log(':(')
-            msg.innerHTML = `<div class="movie_div" id=""> <img class="poster"> <label class="movie_title">Nenhum filme encontrado...</label> <label class="year"></label> </div>`
-        }
-        })
-      }
-    
+            .then((resposta) => {
+                if (resposta.ok) {
+                    resposta.json().then(json => {
+                        let max_pag = (json.length/max_filmes).toFixed(0)
+
+                        if (max_pag == 0){
+                            max_pag = 1
+                        }
+
+                        msg.innerHTML = '';
+                        console.log('Total de páginas: ', (max_pag));
+                        console.log('Página atual: ', (pag_num));
+                        for (let i = (max_filmes * (pag_num) - max_filmes); i < (max_filmes * pag_num) && i <= json.length-1; i++) {
+                            let data = json[i].dt_lancamento
+                            //console.log(json[i].idFilme)
+                            msg.innerHTML += `<div class="movie_div" id="${json[i].idFilme}" onclick="registrar(this.id)" onmouseover="exibir(this.id)"> <img class="poster" src="https://image.tmdb.org/t/p/original/${json[i].path}"> <label class="movie_title">${json[i].titulo}</label> <label class="year">(${data.slice(0, 4)})</label> </div>`
+                        }
+
+                        let page_buttons = '';
+                        let count_button = 2;
+
+                        if(pag_num != 1){
+                            page_buttons += `<button id="${pag_num - 1}" onclick="page_change(this.id)" class=""> ${pag_num - 1} </button>`
+                            count_button = 1;
+                        }
+
+                        for(let pag = Number(pag_num); pag <= pag_num+count_button && pag <= max_pag; pag++){
+                            if(pag == pag_num){
+                                console.log("Epa")
+                                page_buttons += `<button id="${pag}" onclick="page_change(this.id)" class="selected"> ${pag} </button>`
+                            }
+                            else{
+                                page_buttons += `<button id="${pag}" onclick="page_change(this.id)"> ${pag} </button>`
+                            }
+                        }
+                        page_button.innerHTML = page_buttons;
+                    })
+                }
+                else {
+                    msg.innerHTML = `<div class="movie_div" id=""> <img class="poster"> <label class="movie_title">Nenhum filme encontrado...</label> <label class="year"></label> </div>`
+                }
+            })
+    }
+
+function registrar(id) {
+    console.log(id)
+};
+
+function exibir(id) {
+    let poster = document.getElementById(id)
+    // Irá verificar se o filme está na sua coleção, e se não estiver exibir um botão para adiciona-lo.
+    // Após clicar nele, um popup modal irá ser exibido solicitando as informações de data, valores, local de compra e mídia (no registrar).
+    // poster.style
+};
+
+function page_change(pag) {
+    pag_num = Number(pag)
+    search()
+};
+
 </script>
+
 </html>
