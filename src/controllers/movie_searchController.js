@@ -34,7 +34,6 @@ function pesquisar(req, res) {
 function pesquisar_id(req, res) {
     var id = req.body.idServer;
     var search = req.body.searchServer;
-    console.log(search)
 
     if (req == undefined) {
         res.status(400).send("Erro: undefined!");

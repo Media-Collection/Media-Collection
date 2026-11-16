@@ -74,7 +74,12 @@
                         for (let i = (max_filmes * (pag_num) - max_filmes); i < (max_filmes * pag_num) && i <= json.length-1; i++) {
                             let data = json[i].dt_lancamento
                             //console.log(json[i].idFilme)
-                            msg.innerHTML += `<div class="movie_div" id="${json[i].idFilme}" onclick="registrar(this.id)" onmouseover="exibir(this.id)"> <img class="poster" src="https://image.tmdb.org/t/p/original/${json[i].path}"> <label class="movie_title">${json[i].titulo}</label> <label class="year">(${data.slice(0, 4)})</label> </div>`
+                            if(json[i].midia = 'DVD'){
+                                msg.innerHTML += `<div class="movie_div" id="${json[i].idFilme}" onclick="registrar(this.id)" onmouseover="exibir(this.id)"> <img class="poster" src="https://image.tmdb.org/t/p/original/${json[i].path}"> <label class="movie_title">${json[i].titulo}</label> <label class="year">(${data.slice(0, 4)})</label> </div>`
+                            }else{
+                                msg.innerHTML += `<div class="movie_div_blue" id="${json[i].idFilme}" onclick="registrar(this.id)" onmouseover="exibir(this.id)"> <img class="poster" src="https://image.tmdb.org/t/p/original/${json[i].path}"> <label class="movie_title">${json[i].titulo}</label> <label class="year">(${data.slice(0, 4)})</label> </div>`
+                            }
+                            
                         }
 
                         let page_buttons = '';
@@ -106,15 +111,38 @@
             })
     }
 
-function registrar(id) {
-    console.log(id)
+function exibir(id) {
 };
 
-function exibir(id) {
-    let poster = document.getElementById(id)
+
+function registrar(id) {
     // Irá verificar se o filme está na sua coleção, e se não estiver exibir um botão para adiciona-lo.
     // Após clicar nele, um popup modal irá ser exibido solicitando as informações de data, valores, local de compra e mídia (no registrar).
     // poster.style
+
+    //let filme = document.getElementById(id)
+
+    fetch("/movies/adicionar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idServer: sessionStorage.ID_USUARIO,
+                filmeServer: id
+            })
+        })
+
+            .then((resposta) => {
+                if (resposta.ok) {
+                    console.log("Filme adicionado!")
+                }
+                else{
+                    alert("Filme já está na sua coleção!")
+                }
+})
+
+
 };
 
 function page_change(pag) {
