@@ -63,7 +63,8 @@
             .then((resposta) => {
                 if (resposta.ok) {
                     resposta.json().then(json => {
-                        let max_pag = (json.length / max_filmes).toFixed(0)
+                        console.log(json.length, max_filmes)
+                        let max_pag = Math.ceil(json.length / max_filmes)
 
                         if (max_pag == 0) {
                             max_pag = 1
