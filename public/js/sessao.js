@@ -27,6 +27,17 @@ function validarSessaoCollection() {
     }
 }
 
+function validarSessaoAddFilm(){
+    var email = sessionStorage.EMAIL_USUARIO;
+    var nome = sessionStorage.NOME_USUARIO;
+
+    if (email != null && nome != null) {
+        return(true)
+    }else{
+        return(false)
+    }
+}
+
 function limparSessao() {
     sessionStorage.clear();
     window.location = "../login.html";
