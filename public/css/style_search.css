@@ -265,7 +265,7 @@ button:hover{
 
 }
 
-@media (max-width: 1700px) {
+@media (max-width: 1800px) {
     .poster_grid{
         grid-template-columns: repeat(6, 215px);
     }
@@ -275,7 +275,7 @@ button:hover{
     }
 }
 
-@media (max-width: 1500px) {
+@media (max-width: 1600px) {
     .poster_grid{
         grid-template-columns: repeat(5, 215px);
     }
@@ -321,5 +321,11 @@ button:hover{
     .films{
         display: none;
     }
+}
 
+
+@media (max-width: 530px) {
+    .logo{
+        margin-left: 0;
+    }
 }
