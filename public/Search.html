@@ -42,7 +42,6 @@
         </main>
         <div id="page_button"></div>
     </section>
-
     </div>
 
 
@@ -56,7 +55,7 @@
             add_box.style.display = "block";
 
             if (validarSessaoAddFilm()) {
-                add_box.innerHTML = `<b> Título:  ${titulos[id]} <br> Data de Lançamento:  ${(data_lancamento[id]).slice(0,10)} <br> gênero:  ${genero[id]} <br><br></b>`
+                add_box.innerHTML = `<b> Título:  ${titulos[id]} <br> Data de Lançamento:  ${(data_lancamento[id]).slice(0,10)} <br> Gênero:  ${genero[id]} <br><br></b> <br>     <button class="selected" onclick="registrar(${id_filme[id]})"> Adicionar à coleção </button> `
             } else {
                 add_box.innerHTML = `<b> Você precisa estar logado para adicionar filmes à sua coleção </b>`
             }
@@ -86,7 +85,9 @@
 
             .then((resposta) => {
                 if (resposta.ok) {
+                    alert("Filme adicionado á coleção!")
                     console.log("Filme adicionado!")
+                    exibir(0)
                 }
                 else {
                     alert("Filme já está na sua coleção!")
