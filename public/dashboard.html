@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/apiFetch.js"></script>
+    <script src="js/sessao.js"></script>
+    <script src="js/search.js"></script>
+    <link rel="stylesheet" href="css/style_search.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <title>Search</title>
+</head>
+
+<body class="search_main">
+    <div class="button_line">
+        <div id="left" class="left">
+            <a href="index.html"><img class="logo" src="img\Logo v2.png" alt="logo"><a href="Home.html"></a>
+                <a href="Search.html"><button class="films attached_button">Films</button></a>
+                <a href="collection.html"><button class="collection attached_button">My Collection</button></a>
+                <a href="dashboard.html"><button class="selected dash attached_button">Dashboard</button></a>
+        </div>
+        <div id="right" class="right">
+            <a href="login.html"><button class="basic_button"> Sign in </button></a>
+            <a href="Create.html"><button class="create_account"> Create Account </button></a>
+        </div>
+    </div>
+    </div>
+    <section class="center_column">
+        <main class="movie_box" id="movie_box">
+            <div class="poster_grid" id="msg">
+            </div>
+        </main>
+        <div id="page_button"></div>
+    </section>
+    </div>
+
+
+    <!-- <button onclick="buscar()">Procurar o Filme</button><br><br> -->
+</body>
+<script>
+    if (validarSessaoAddFilm()) {
+        let up_buttons = document.getElementById("right");
+        up_buttons.innerHTML = '<button onclick="limparSessao()" class="selected basic_button"> Sair </button>'
+    }else{
+        window.location = "../login.html";
+    }
+
+    function page_change(pag) {
+        pag_num = Number(pag)
+        search()
+    };
+
+</script>
+
+</html>
