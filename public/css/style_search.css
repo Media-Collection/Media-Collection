@@ -164,6 +164,7 @@ button{
 
 button:hover{
     cursor: pointer;
+    background-color: #8DCBBC;
 }
 
 .logo{
