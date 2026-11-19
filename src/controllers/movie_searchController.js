@@ -47,7 +47,7 @@ function pesquisar_id(req, res) {
                         res.status(403).send("Filme não encontrado)");
                     }
                     else{
-                        console.log(resultadoSearch);
+                        //console.log(resultadoSearch);
                         res.json(resultadoSearch);
                     }
                 })

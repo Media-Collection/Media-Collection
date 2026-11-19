@@ -22,7 +22,7 @@
                 <!--                 <a href="collection.html"><button class="collection attached_button">My Collection</button></a>
                 <button class="dash attached_button">Dashboard</button> -->
         </div>
-        <div class="right">
+        <div id="right" class="right">
             <a href="login.html"><button class="basic_button"> Sign in </button></a>
             <a href="Create.html"><button class="create_account"> Create Account </button></a>
         </div>
@@ -31,7 +31,7 @@
     </div>
     </div>
     <section class="center_column">
-        <div class="add_box" id="add_box">
+        <div class="add_box" style="display: none;" id="add_box">
             Título: ${Filme} <br>
             Data de Lançamento: ${data} <br>
             gênero: ${genero} <br><br>
@@ -48,6 +48,11 @@
     <!-- <button onclick="buscar()">Procurar o Filme</button><br><br> -->
 </body>
 <script>
+    if (validarSessaoAddFilm()) {
+        let up_buttons = document.getElementById("right");
+        up_buttons.innerHTML = '<button onclick="limparSessao()" class="selected basic_button"> Sair </button>'
+    }
+
     function exibir(id) {
         let add_box = document.getElementById("add_box");
 
@@ -55,7 +60,7 @@
             add_box.style.display = "block";
 
             if (validarSessaoAddFilm()) {
-                add_box.innerHTML = `<b> Título:  ${titulos[id]} <br> Data de Lançamento:  ${(data_lancamento[id]).slice(0,10)} <br> Gênero:  ${genero[id]} <br><br></b> <br>     <button class="selected" onclick="registrar(${id_filme[id]})"> Adicionar à coleção </button> `
+                add_box.innerHTML = `<b> Título:  ${titulos[id]} <br> Data de Lançamento:  ${(data_lancamento[id]).slice(0, 10)} <br> Gênero:  ${genero[id]} <br><br></b> <br>     <button class="selected" onclick="registrar(${id_filme[id]})"> Adicionar à coleção </button> `
             } else {
                 add_box.innerHTML = `<b> Você precisa estar logado para adicionar filmes à sua coleção </b>`
             }
