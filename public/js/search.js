@@ -113,6 +113,8 @@ let titulos = [];
                         msg.innerHTML = '';
                         console.log('Total de páginas: ', (max_pag));
                         console.log('Página atual: ', (pag_num));
+                        let filmes = ``;
+
                         for (let i = (max_filmes * (pag_num) - max_filmes); i < (max_filmes * pag_num) && i <= json.length - 1; i++, pos++) {
                             let data = json[i].dt_lancamento
                             let generos = json[i].genero
@@ -129,8 +131,9 @@ let titulos = [];
                             genero.push(genero1);
                             id_filme.push(json[i].idFilme);
 
-                            msg.innerHTML += `<div class="movie_div" id="${pos}" onclick="exibir(this.id)" onmouseover="""> <img class="poster" src="https://image.tmdb.org/t/p/original/${json[i].path}"> <label class="movie_title">${(json[i].titulo)}</label> <label class="year">(<b>${genero1}</b> - ${data.slice(0, 4)})</label> </div>`
+                            filmes += `<div class="movie_div" id="${pos}" onclick="exibir(this.id)" onmouseover="""> <img class="poster" src="https://image.tmdb.org/t/p/original/${json[i].path}"> <label class="movie_title">${(json[i].titulo)}</label> <label class="year">(<b>${genero1}</b> - ${data.slice(0, 4)})</label> </div>`
                         }
+                        msg.innerHTML = filmes;
 
                         let page_buttons = '';
                         let count_button = 2;
@@ -156,6 +159,7 @@ let titulos = [];
                         if ((pag_num + count_button) < max_pag) {
                             page_buttons += `<button id="${max_pag}" onclick="page_change(this.id)" style="margin-left: 30px"> ${max_pag} </button>`
                         }
+
                         page_button.innerHTML = page_buttons;
                     })
                 }
