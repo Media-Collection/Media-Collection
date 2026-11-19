@@ -3,11 +3,15 @@ var movie_addModel = require("../models/movie_addModel")
 function adicionar(req, res) {
     var id = req.body.idServer;
     var filme = req.body.filmeServer;
+    var data = req.body.dataServer;
+    var valor = req.body.valorServer;
+    var local = req.body.localServer;
+    var midia = req.body.midiaServer;
 
     if (req == undefined) {
         res.status(400).send("Erro: undefined!");
     } else {
-        movie_addModel.adicionar(id, filme)
+        movie_addModel.adicionar(id, filme, data, valor, local, midia)
             .then((resultado) => {
                 console.log(`Filme ${filme} adicionado à coleção ${id}`)
                 res.status(200).send("Filme adicionado com sucesso");

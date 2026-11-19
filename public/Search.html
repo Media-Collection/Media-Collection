@@ -60,7 +60,24 @@
             add_box.style.display = "block";
 
             if (validarSessaoAddFilm()) {
-                add_box.innerHTML = `<b> Título:  ${titulos[id]} <br> Data de Lançamento:  ${(data_lancamento[id]).slice(0, 10)} <br> Gênero:  ${genero[id]} <br><br></b> <br>     <button class="selected" onclick="registrar(${id_filme[id]})"> Adicionar à coleção </button> `
+                add_box.innerHTML = `
+        <b> Título:  ${titulos[id]} <br> Data de Lançamento:  ${(data_lancamento[id]).slice(0, 10)} <br> Gênero:  ${genero[id]} <br><br></b> <br> Data de Compra: <input type="date" id="ipt_data"><br>
+    Valor da Compra: <input type="number" id="ipt_valor"><br>
+    Local de Compra: <select name="" id="ipt_local">
+        <option value="1">Sebo</option>
+        <option value="2">Bazar</option>
+        <option value="3">Outros</option>
+        <option value="4">Internet</option>
+        <option value="5">Presente</option>
+    </select><br>
+    Tipo de mídia: <select name="" id="ipt_midia">
+        <option value="1">DVD</option>
+        <option value="2">Blu-ray</option>
+        <option value="3">VHS</option>
+        <option value="4">4K UHD</option>
+        <option value="5">UMD</option>
+    </select><br><br>
+    <button class="selected" onclick="registrar(${id_filme[id]})"> Adicionar à coleção </button> `
             } else {
                 add_box.innerHTML = `<b> Você precisa estar logado para adicionar filmes à sua coleção </b>`
             }
@@ -76,6 +93,15 @@
         // poster.style
 
         //let filme = document.getElementById(id)
+        let data = ipt_data.value;
+        let valor = Number(ipt_valor.value);
+        let local = ipt_local.value;
+        let midia = ipt_midia.value;
+        console.log(data);
+
+        if(!data || !valor || !local || !midia){
+            alert("Todos os valores devem ser preenchidos")
+        }else{
 
         fetch("/movies/adicionar", {
             method: "POST",
@@ -84,7 +110,11 @@
             },
             body: JSON.stringify({
                 idServer: sessionStorage.ID_USUARIO,
-                filmeServer: id
+                filmeServer: id,
+                dataServer: data,
+                valorServer: valor,
+                localServer: ipt_local.value,
+                midiaServer: ipt_midia.value
             })
         })
 
@@ -100,6 +130,7 @@
             })
 
 
+    }
     };
 
     function page_change(pag) {

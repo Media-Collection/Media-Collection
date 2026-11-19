@@ -16,8 +16,8 @@ function cadastrar(nome, email, senha) {
     // Insira exatamente a query do banco aqui, lembrando da nomenclatura exata nos valores
     //  e na ordem de inserção dos dados.
     var instrucaoSql = `
-    INSERT INTO usuario(username,email,senha,dt_criacao) VALUES ('${nome}', '${email}', '${senha}', DEFAULT);
-    INSERT INTO colecao(idColecao, descricao, fk_usuario) VALUES ((SELECT idUsuario FROM usuario WHERE email = '${email}' AND senha = '${senha}'), 'Coleção Principal', (SELECT idUsuario FROM usuario WHERE email = '${email}' AND senha = '${senha}'));
+    INSERT INTO usuario(username, email, senha, dt_criacao) VALUES ('${nome}', '${email}', '${senha}', DEFAULT);
+    INSERT INTO colecao(idColecao, descricao, fk_usuario) VALUES ((SELECT idUsuario FROM usuario WHERE email = '${email}' AND senha = '${senha}'), 'Coleção de ${nome}', (SELECT idUsuario FROM usuario WHERE email = '${email}' AND senha = '${senha}'));
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);

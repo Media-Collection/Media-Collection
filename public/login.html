@@ -19,7 +19,7 @@
 <!--                 <a href="collection.html"><button class="attached_button">My Collection</button></a>
                 <button class="attached_button">Dashboard</button> -->
             </div>
-            <div class="right">
+            <div id="right" class="right">
                 <a href="login.html"><button class="basic_button"> Sign in </button></a>
                 <a href="Create.html"><button class="create_account"> Create Account </button></a>
             </div>
@@ -43,6 +43,11 @@
     <!-- <button onclick="buscar()">Procurar o Filme</button><br><br> -->
 </body>
 <script>
+    if (validarSessaoAddFilm()) {
+        let up_buttons = document.getElementById("right");
+        up_buttons.innerHTML = '<button onclick="limparSessao()" class="selected basic_button"> Sair </button>'
+    }
+
   function entrar() {
           var emailVar = ipt_email.value;
           var senhaVar = ipt_password.value;
