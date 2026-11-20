@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="js/apiFetch.js"></script>
+  <script src="js/sessao.js"></script>
   <link rel="stylesheet" href="css/style_search.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://gstatic.com" crossorigin>
@@ -12,15 +13,15 @@
   <title>Search</title>
 </head>
 
-<body class="search_main">
+<body onload="validarSessaoFilm()" class="search_main">
   <div class="button_line">
-    <div class="left">
+    <div id="left" class="left">
       <a href="index.html"><img class="logo" src="img\Logo v2.png" alt="logo"><a href="Home.html"></a>
         <a href="Search.html"><button class="attached_button">Films</button></a>
-        <button class="attached_button">My Collection</button>
-        <button class="attached_button">Wishlist</button>
+<!--         <a href="collection.html"><button class="attached_button">My Collection</button></a>
+        <button class="attached_button">Dashboard</button> -->
     </div>
-    <div class="right">
+    <div id="right" class="right">
       <a href="login.html"><button class="basic_button"> Sign in </button></a>
       <a href="Create.html"><button class="create_account"> Create Account </button></a>
     </div>
@@ -33,13 +34,13 @@
       </div>
       <div class="cadastro">
         <label>Join Collect Physical!</label>
-        <section> E-mail: <br><input type="text" id="ipt_email" placeholder="E-mail"> </section>
+        <section> E-mail: <br><input type="email" id="ipt_email" placeholder="E-mail"> </section>
         <section> Username: <br><input type="text" id="ipt_username" placeholder="Username"> </section>
-        <section> Password: <br><input type="text" id="ipt_password" placeholder="Password"> </section>
-        <section> Confirm Password: <br><input type="text" id="ipt_password2" placeholder="Confirm your Password">
+        <section> Password: <br><input type="password" id="ipt_password" placeholder="Password"> </section>
+        <section> Confirm Password: <br><input type="password" id="ipt_password2" placeholder="Confirm your Password">
         </section>
-        <div id="error_message"></div>
-        <button class="signup" onclick="cadastrar()"> Sign up </button>
+        <div class="erro" id="error_message"></div>
+        <button class="signup" onclick="cadastrar()"> Create Account </button>
       </div>
     </main>
   </section>
@@ -65,6 +66,12 @@
 
       return false;
     }
+    else if(senha.length < 5){
+      error_message.innerHTML = "Senha deve conter pelo menos 5 dígitos"
+    }
+    else if(senha != confirmacao_senha){
+      error_message.innerHTML = "Senhas não coincidem"
+    }
     else {
       // Enviando o valor da nova input
       fetch("/usuarios/cadastrar", {
@@ -82,37 +89,14 @@
           console.log("resposta: ", resposta);
 
           if (resposta.ok) {
-
-            fetch("/usuarios/autenticar", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify({
-                emailServer: email,
-                senhaServer: senha
-              })
-            })
-              .then(function (resposta) {
-                console.log("ESTOU NO THEN DO autenticar()!");
-
-                if (resposta.ok) {
-                  resposta.json().then(function (json) {
-
-                    // Cadastrando coleção
-                    cadastrar_colecao(json.id);
-
-                  });
-                } else {
-                  throw new Error("Erro ao realizar autenticação!");
-                }
-              })
-              .catch(function (erro) {
-                console.log(erro);
-              });
+            error_message.innerHTML = '<b class="sucesso"> Cadastro realizado com sucesso! Redirecionando para tela de Login... </b>';
+            
+          setTimeout(() => {
+            window.location = "login.html";
+          }, 2000);
 
           } else {
-            throw new Error("Houve um erro ao tentar realizar o cadastro!");
+            throw new Error("Email já cadastrado");
           }
         })
         .catch(function (erro) {
@@ -122,7 +106,7 @@
     }
   }
 
-  function cadastrar_colecao(id) {
+/*   function cadastrar_colecao(id) {
     fetch("/usuarios/cadastrar_colecao", {
       method: "POST",
       headers: {
@@ -140,7 +124,7 @@
         else {
 
           error_message.innerHTML =
-            "Cadastro realizado com sucesso! Redirecionando para tela de Login...";
+            '<b class="sucesso"> Cadastro realizado com sucesso! Redirecionando para tela de Login... </b>';
             
           setTimeout(() => {
             window.location = "login.html";
@@ -150,7 +134,7 @@
       .catch(function (erro) {
         console.log(erro);
       });
-  }
+  } */
 </script>
 
 </html>

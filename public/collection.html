@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/apiFetch.js"></script>
+    <script src="js/sessao.js"></script>
+    <script src="js/search.js"></script>
+    <link rel="stylesheet" href="css/style_search.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <title>Search</title>
+</head>
+
+<body onload="search_id(), validarSessaoCollection()" class="search_main">
+    <div class="button_line">
+        <div id="left" class="left">
+            <a href="index.html"><img class="logo" src="img\Logo v2.png" alt="logo"><a href="Home.html"></a>
+                <a href="Search.html"><button class="films attached_button">Films</button></a>
+                <!--                 <a href="collection.html"><button class="selected attached_button">My Collection</button></a>
+                <button class="attached_button">Dashboard</button> -->
+        </div>
+        <div class="right">
+            <button onclick="limparSessao()" class="selected basic_button"> Sair </button>
+        </div>
+        <input onkeyup="(event.key === 'Enter') ? (search_id(), pag_num = 1) : undefined;" type="text" id="ipt_filme"
+            placeholder="Type your movie">
+    </div>
+    </div>
+    <section class="center_column">
+        <main class="movie_box" id="movie_box">
+            <div class="poster_grid" id="msg">
+                <div class="movie_div"> <img class="poster"> <label class="movie_title">titulo</label> </div>
+            </div>
+        </main>
+        <div id="page_button"></div>
+    </section>
+
+    <!-- <button onclick="buscar()">Procurar o Filme</button><br><br> -->
+</body>
+<script>
+    function page_change(pag) {
+        pag_num = Number(pag)
+        search_id()
+    };
+</script>
+
+</html>

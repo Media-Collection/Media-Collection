@@ -4,22 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="js/apiFetch.js"></script>
+    <script src="js/sessao.js"></script>
     <link rel="stylesheet" href="css/style_search.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://googleapis.com" rel="stylesheet">
     <title>Search</title>
 </head>
-<body class="search_main">
+<body onload="validarSessaoFilm()" class="search_main">
             <div class="button_line">
-            <div class="left">
+            <div id="left" class="left">
                 <a href="index.html"><img class="logo" src="img\Logo v2.png" alt="logo"><a href="Home.html"></a>
                 <a href="Search.html"><button class="attached_button">Films</button></a>
-                <button class="attached_button">My Collection</button>
-                <button class="attached_button">Wishlist</button>
+<!--                 <a href="collection.html"><button class="attached_button">My Collection</button></a>
+                <button class="attached_button">Dashboard</button> -->
             </div>
-            <div class="right">
-                <a href="login.html"><button class="basic_button"> Sign in </button></a>
+            <div id="right" class="right">
+                <a href="login.html"><button class="selected basic_button"> Sign in </button></a>
                 <a href="Create.html"><button class="create_account"> Create Account </button></a>
             </div>
                 <!-- <input onkeyup="(event.key === 'Enter') ? buscar() : undefined;" type="text" id="ipt_filme"> -->
@@ -31,9 +32,9 @@
                     </div>
                     <div class="cadastro">
                         <label>Welcome back!</label>
-                            <section> E-mail: <br><input type="text" id="ipt_email" placeholder="E-mail"> </section>
-                            <section> Password: <br><input type="text" id="ipt_password" placeholder="Password"> </section>
-                            <div id="error_message"></div>
+                            <section> E-mail: <br><input type="email" id="ipt_email" placeholder="E-mail"> </section>
+                            <section> Password: <br><input type="password" id="ipt_password" placeholder="Password"> </section>
+                            <div class="erro" id="error_message"></div>
                         <button class="signup" onclick="entrar()"> Sign In </button>
                     </div>
                 </main>
@@ -42,12 +43,16 @@
     <!-- <button onclick="buscar()">Procurar o Filme</button><br><br> -->
 </body>
 <script>
+    if (validarSessaoAddFilm()) {
+        let up_buttons = document.getElementById("right");
+        up_buttons.innerHTML = '<button onclick="limparSessao()" class="selected basic_button"> Sair </button>'
+    }
+
   function entrar() {
           var emailVar = ipt_email.value;
           var senhaVar = ipt_password.value;
 
           if (emailVar == "" || senhaVar == "") {
-              cardErro.style.display = "block"
               error_message.innerHTML = "Todos os dados devem ser preenchidos";
               return false;
           }
@@ -77,15 +82,15 @@
                       sessionStorage.EMAIL_USUARIO = json.email;
                       sessionStorage.NOME_USUARIO = json.nome;
                       sessionStorage.ID_USUARIO = json.id;
-                      sessionStorage.COLECAO = json.colecao;
-
+                      
+                      error_message.innerHTML = '<b class="sucesso"> Seja bem vindo! Redirecionando para a dashboard... </b>';
                       setTimeout(function () {
-                          window.location = "Search.html";
+                          window.location = "collection.html";
                       }, 1000); // apenas para exibir o loading
                   });
 
               } else {
-
+                  error_message.innerHTML = "Conta não encontrada"
                   console.log("Houve um erro ao tentar realizar o login!");
               }
 

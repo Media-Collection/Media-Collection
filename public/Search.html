@@ -1,40 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="js/apiFetch.js"></script>
+    <script src="js/sessao.js"></script>
+    <script src="js/search.js"></script>
     <link rel="stylesheet" href="css/style_search.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://googleapis.com" rel="stylesheet">
     <title>Search</title>
 </head>
-<body class="search_main">
-            <div class="button_line">
-            <div class="left">
-                <a href="index.html"><img class="logo" src="img\Logo v2.png" alt="logo"><a href="Home.html"></a>
-                <a href="Search.html"><button class="selected attached_button">Films</button></a>
-                <button class="attached_button">My Collection</button>
-                <button class="attached_button">Wishlist</button>
-            </div>
-            <div class="right">
-                <a href="login.html"><button class="basic_button"> Sign in </button></a>
-                <a href="Create.html"><button class="create_account"> Create Account </button></a>
-            </div>
-            <input onkeyup="(event.key === 'Enter') ? buscar() : undefined;" type="text" id="ipt_filme" placeholder="Type your movie">
-            </div>
+
+<body onload="search(), validarSessaoFilm()" class="search_main">
+    <div class="button_line">
+        <div id="left" class="left">
+            <a href="index.html"><img class="logo" src="img\Logo v2.png" alt="logo"><a href="Home.html"></a>
+                <a href="Search.html"><button class="films selected attached_button">Films</button></a>
+                <!--                 <a href="collection.html"><button class="collection attached_button">My Collection</button></a>
+                <button class="dash attached_button">Dashboard</button> -->
         </div>
-        <section class="center">
-            <main class="movie_box">
-                <div class="poster_grid" id="msg">
-                    <div class="movie_div"> <img class="poster"> <label class="movie_title">titulo</label> </div>
-                </div>
-            </main>
-        </section>
+        <div id="right" class="right">
+            <a href="login.html"><button class="basic_button"> Sign in </button></a>
+            <a href="Create.html"><button class="create_account"> Create Account </button></a>
+        </div>
+        <input onkeyup="(event.key === 'Enter') ? (search(), pag_num = 1) : undefined;" type="text" id="ipt_filme"
+            placeholder="Type your movie">
+    </div>
+    </div>
+    <section class="center_column">
+        <div class="add_box" style="display: none;" id="add_box">
+            Título: ${Filme} <br>
+            Data de Lançamento: ${data} <br>
+            gênero: ${genero} <br><br>
+        </div>
+        <main class="movie_box" id="movie_box">
+            <div class="poster_grid" id="msg">
+            </div>
+        </main>
+        <div id="page_button"></div>
+    </section>
+    </div>
+
 
     <!-- <button onclick="buscar()">Procurar o Filme</button><br><br> -->
 </body>
 <script>
+    if (validarSessaoAddFilm()) {
+        let up_buttons = document.getElementById("right");
+        up_buttons.innerHTML = '<button onclick="limparSessao()" class="selected basic_button"> Sair </button>'
+    }
+
+    function exibir(id) {
+        let add_box = document.getElementById("add_box");
+
+        if (add_box.style.display == "none") {
+            add_box.style.display = "block";
+
+            if (validarSessaoAddFilm()) {
+                add_box.innerHTML = `
+        <b> Título:  ${titulos[id]} <br> Data de Lançamento:  ${(data_lancamento[id]).slice(0, 10)} <br> Gênero:  ${genero[id]} <br><br></b> <br> Data de Compra: <input type="date" id="ipt_data"><br>
+    Valor da Compra: <input type="number" id="ipt_valor"><br>
+    Local de Compra: <select name="" id="ipt_local">
+        <option value="1">Sebo</option>
+        <option value="2">Bazar</option>
+        <option value="3">Outros</option>
+        <option value="4">Internet</option>
+        <option value="5">Presente</option>
+    </select><br>
+    Tipo de mídia: <select name="" id="ipt_midia">
+        <option value="1">DVD</option>
+        <option value="2">Blu-ray</option>
+        <option value="3">VHS</option>
+        <option value="4">4K UHD</option>
+        <option value="5">UMD</option>
+    </select><br><br>
+    <button class="selected" onclick="registrar(${id_filme[id]})"> Adicionar à coleção </button> `
+            } else {
+                add_box.innerHTML = `<b> Você precisa estar logado para adicionar filmes à sua coleção </b>`
+            }
+        } else {
+            add_box.style.display = "none";
+        }
+    };
+
+
+    function registrar(id) {
+        // Irá verificar se o filme está na sua coleção, e se não estiver exibir um botão para adiciona-lo.
+        // Após clicar nele, um popup modal irá ser exibido solicitando as informações de data, valores, local de compra e mídia (no registrar).
+        // poster.style
+
+        //let filme = document.getElementById(id)
+        let data = ipt_data.value;
+        let valor = Number(ipt_valor.value);
+        let local = ipt_local.value;
+        let midia = ipt_midia.value;
+        console.log(data);
+
+        if(!data || !valor || !local || !midia){
+            alert("Todos os valores devem ser preenchidos")
+        }else{
+
+        fetch("/movies/adicionar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idServer: sessionStorage.ID_USUARIO,
+                filmeServer: id,
+                dataServer: data,
+                valorServer: valor,
+                localServer: ipt_local.value,
+                midiaServer: ipt_midia.value
+            })
+        })
+
+            .then((resposta) => {
+                if (resposta.ok) {
+                    alert("Filme adicionado á coleção!")
+                    console.log("Filme adicionado!")
+                    exibir(0)
+                }
+                else {
+                    alert("Filme já está na sua coleção!")
+                }
+            })
+
+
+    }
+    };
+
+    function page_change(pag) {
+        pag_num = Number(pag)
+        search()
+    };
+
 </script>
+
 </html>
