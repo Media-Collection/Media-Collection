@@ -76,7 +76,7 @@
             })
     }
 
-let titulos = [];
+    let titulos = [];
     let data_lancamento = [];
     let genero = [];
     let id_filme = [];

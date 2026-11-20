@@ -48,6 +48,9 @@
     <!-- <button onclick="buscar()">Procurar o Filme</button><br><br> -->
 </body>
 <script>
+    let last_date = '2026-01-01';
+    let last_value = 0;
+
     if (validarSessaoAddFilm()) {
         let up_buttons = document.getElementById("right");
         up_buttons.innerHTML = '<button onclick="limparSessao()" class="selected basic_button"> Sair </button>'
@@ -61,8 +64,9 @@
 
             if (validarSessaoAddFilm()) {
                 add_box.innerHTML = `
-        <b> Título:  ${titulos[id]} <br> Data de Lançamento:  ${(data_lancamento[id]).slice(0, 10)} <br> Gênero:  ${genero[id]} <br><br></b> <br> Data de Compra: <input type="date" id="ipt_data"><br>
-    Valor da Compra: <input type="number" id="ipt_valor"><br>
+    <b> Título:  ${titulos[id]} <br> Data de Lançamento:  ${(data_lancamento[id]).slice(0, 10)} <br> Gênero:  ${genero[id]} <br><br></b> <br> 
+    Data de Compra: <input type="date" id="ipt_data" min="2020-01-01" max="2027-12-31" value="${last_date}"><br>
+    Valor da Compra: <input type="number" id="ipt_valor" value="${last_value}"><br>
     Local de Compra: <select name="" id="ipt_local">
         <option value="1">Sebo</option>
         <option value="2">Bazar</option>
@@ -97,7 +101,9 @@
         let valor = Number(ipt_valor.value);
         let local = ipt_local.value;
         let midia = ipt_midia.value;
-        console.log(data);
+
+        last_date = data;
+        last_value = valor;
 
         if(!data || !valor || !local || !midia){
             alert("Todos os valores devem ser preenchidos")
@@ -120,8 +126,10 @@
 
             .then((resposta) => {
                 if (resposta.ok) {
-                    alert("Filme adicionado á coleção!")
+                    alert(`Filme ${titulos[id_filme.indexOf(id)]} adicionado á coleção!`)
                     console.log("Filme adicionado!")
+                    //last_local = local;
+                    //last_midia = midia;
                     exibir(0)
                 }
                 else {
