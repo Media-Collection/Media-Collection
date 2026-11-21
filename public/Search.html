@@ -7,6 +7,7 @@
     <script src="js/apiFetch.js"></script>
     <script src="js/sessao.js"></script>
     <script src="js/search.js"></script>
+    <script src="js/lastInput.js"></script>
     <link rel="stylesheet" href="css/style_search.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
@@ -48,9 +49,6 @@
     <!-- <button onclick="buscar()">Procurar o Filme</button><br><br> -->
 </body>
 <script>
-    let last_date = '2026-01-01';
-    let last_value = 0;
-
     if (validarSessaoAddFilm()) {
         let up_buttons = document.getElementById("right");
         up_buttons.innerHTML = '<button onclick="limparSessao()" class="selected basic_button"> Sair </button>'
@@ -64,9 +62,9 @@
 
             if (validarSessaoAddFilm()) {
                 add_box.innerHTML = `
-    <b> Título:  ${titulos[id]} <br> Data de Lançamento:  ${(data_lancamento[id]).slice(0, 10)} <br> Gênero:  ${genero[id]} <br><br></b> <br> 
-    Data de Compra: <input type="date" id="ipt_data" min="2020-01-01" max="2027-12-31" value="${last_date}"><br>
-    Valor da Compra: <input type="number" id="ipt_valor" value="${last_value}"><br>
+    <b> Título:  ${titulos[id]} <br> Data de Lançamento:  ${(data_lancamento[id]).slice(0, 10)} <br> Gênero:  ${generos[id]} <br><br></b> <br> 
+    Data de Compra: <input type="date" id="ipt_data" min="2020-01-01" max="2027-12-31" value="${sessionStorage.LAST_DATE_USUARIO}"><br>
+    Valor da Compra: <input type="number" id="ipt_valor" value="${sessionStorage.LAST_VALUE_USUARIO}"><br>
     Local de Compra: <select name="" id="ipt_local">
         <option value="1">Sebo</option>
         <option value="2">Bazar</option>
@@ -102,8 +100,8 @@
         let local = ipt_local.value;
         let midia = ipt_midia.value;
 
-        last_date = data;
-        last_value = valor;
+        sessionStorage.LAST_DATE_USUARIO = data;
+        sessionStorage.LAST_VALUE_USUARIO = valor;
 
         if(!data || !valor || !local || !midia){
             alert("Todos os valores devem ser preenchidos")

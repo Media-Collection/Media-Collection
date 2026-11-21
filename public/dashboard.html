@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/apiFetch.js"></script>
     <script src="js/sessao.js"></script>
     <script src="js/search.js"></script>
@@ -14,7 +15,7 @@
     <title>Search</title>
 </head>
 
-<body class="search_main">
+<body onload="atualizar_graficos()" class="search_main">
     <div class="button_line">
         <div id="left" class="left">
             <a href="index.html"><img class="logo" src="img\Logo v2.png" alt="logo"><a href="Home.html"></a>
@@ -30,10 +31,25 @@
     </div>
     <section class="center_column">
         <main class="movie_box" id="movie_box">
-            <div class="poster_grid" id="msg">
+            <div class="dash_box">
+                <div id="kpi" class="kpi">
+                    Valor Total: R$100.00 <br>
+                    Total de Filmes na coleção: 250 <br>
+                    Média de preço por filme: R$5.00
+                </div>
+                <div class="pie_graphs">
+                    <div class="graph_pie">
+                        <canvas id="genre_pie"></canvas>
+                    </div>
+                    <div class="graph_pie">
+                        <canvas id="buy_pie"></canvas>
+                    </div>
+                    <div class="graph_pie">
+                        <canvas id="year_pie"></canvas>
+                    </div>
+                </div>
             </div>
         </main>
-        <div id="page_button"></div>
     </section>
     </div>
 
@@ -41,18 +57,99 @@
     <!-- <button onclick="buscar()">Procurar o Filme</button><br><br> -->
 </body>
 <script>
+    function atualizar_graficos() {
+
+        let dados_genre = {
+            labels: [],
+            datasets: [{
+                label: 'total',
+                data: [],
+            }]
+        }
+
+        fetch("/dados/genre", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idServer: sessionStorage.ID_USUARIO,
+            })
+        })
+
+            .then((resposta) => {
+                if (resposta.ok) {
+                    resposta.json().then(json => {
+                        for (let i = 0; i < json.length; i++) {
+                            dados_genre.labels.push(json[i].genero)
+                            dados_genre.datasets[0].data.push(json[i].total)
+                        }
+
+                        const config = {
+                            type: 'pie',
+                            data: dados_genre,
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Genres'
+                                    }
+                                }
+                            },
+                        };
+
+                        let myChart = new Chart(
+                            document.getElementById("genre_pie"),
+                            config
+                        )
+
+                        myChart.update();
+                    })
+                }
+            })
+    }
+
+    function atualizar_kpis(){
+        let kpi = document.getElementById("kpi")
+
+        fetch("/dados/kpi", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idServer: sessionStorage.ID_USUARIO,
+            })
+        })
+
+            .then((resposta) => {
+                if (resposta.ok) {
+                    resposta.json().then(json => {
+                    let valor_medio =  Number(json[0].valor_medio);
+                    let quantidade_total = Number(json[0].quantidade_total)
+                    let valor_total = Number(json[0].valor_total);
+                    
+                    kpi.innerHTML = `Valor Total: R$${valor_total.toFixed(2)} <br>
+                    Total de Filmes na coleção: ${quantidade_total} <br>
+                    Média de preço por filme: R$${valor_medio.toFixed(2)}`
+                })
+            }
+    })
+    }   
+
+    atualizar_kpis()
+
+
     if (validarSessaoAddFilm()) {
         let up_buttons = document.getElementById("right");
         up_buttons.innerHTML = '<button onclick="limparSessao()" class="selected basic_button"> Sair </button>'
-    }else{
+    } else {
         window.location = "../login.html";
     }
-
-    function page_change(pag) {
-        pag_num = Number(pag)
-        search()
-    };
-
 </script>
 
 </html>

@@ -271,6 +271,17 @@ button:hover{
 
 }
 
+
+/* Estilização Dash */
+.dash_box{
+    display: flex;
+    flex-direction: row;
+}
+
+.graph_pie{
+    width: 300px;
+}
+
 @media (max-width: 1800px) {
     .poster_grid{
         grid-template-columns: repeat(6, 215px);

@@ -12,7 +12,7 @@ function pesquisar(req, res) {
                     //console.log(`Resultados: ${JSON.stringify(resultadoSearch)}`); // transforma JSON em String
                     if (resultadoSearch.length == 0){
                         console.log('Filme não encontrado')
-                        res.status(403).send("Filme não encontrado)");
+                        res.status(403).send("Filme não encontrado");
                     }
                     else{
                         //console.log(resultadoSearch);
@@ -27,7 +27,6 @@ function pesquisar(req, res) {
                 }
             );
     }
-
 }
 
 
