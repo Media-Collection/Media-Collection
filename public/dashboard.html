@@ -15,7 +15,7 @@
     <title>Search</title>
 </head>
 
-<body onload="atualizar_graficos()" class="search_main">
+<body onload="atualizar_graficos_genero(), atualizar_graficos_local(), atualizar_graficos_ano()" class="search_main">
     <div class="button_line">
         <div id="left" class="left">
             <a href="index.html"><img class="logo" src="img\Logo v2.png" alt="logo"><a href="Home.html"></a>
@@ -31,22 +31,27 @@
     </div>
     <section class="center_column">
         <main class="movie_box" id="movie_box">
-            <div class="dash_box">
+            <div class="dashboard">
                 <div id="kpi" class="kpi">
                     Valor Total: R$100.00 <br>
                     Total de Filmes na coleção: 250 <br>
                     Média de preço por filme: R$5.00
                 </div>
                 <div class="pie_graphs">
-                    <div class="graph_pie">
-                        <canvas id="genre_pie"></canvas>
+                    <div class="center">
+                        <div class="graph_pie">
+                            <canvas id="genre_pie"></canvas>
+                        </div>
+                        <div class="graph_pie">
+                            <canvas id="buy_pie"></canvas>
+                        </div>
                     </div>
-                    <div class="graph_pie">
-                        <canvas id="buy_pie"></canvas>
+                    <div class="center">
+                        <div class="graph_pie">
+                            <canvas id="year_pie"></canvas>
+                        </div>
                     </div>
-                    <div class="graph_pie">
-                        <canvas id="year_pie"></canvas>
-                    </div>
+
                 </div>
             </div>
         </main>
@@ -57,13 +62,13 @@
     <!-- <button onclick="buscar()">Procurar o Filme</button><br><br> -->
 </body>
 <script>
-    function atualizar_graficos() {
-
+    function atualizar_graficos_genero() {
         let dados_genre = {
             labels: [],
             datasets: [{
                 label: 'total',
                 data: [],
+                cutout: 35
             }]
         }
 
@@ -113,7 +118,164 @@
             })
     }
 
-    function atualizar_kpis(){
+    function atualizar_graficos_local() {
+        let dados_local = {
+            labels: [],
+            datasets: [{
+                label: 'total',
+                data: [],
+                cutout: 35
+            }]
+        }
+
+        fetch("/dados/local_compra", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idServer: sessionStorage.ID_USUARIO,
+            })
+        })
+
+            .then((resposta) => {
+                if (resposta.ok) {
+                    resposta.json().then(json => {
+                        for (let i = 0; i < json.length; i++) {
+                            dados_local.labels.push(json[i].local)
+                            dados_local.datasets[0].data.push(json[i].quantidade_local)
+                        }
+
+                        const config = {
+                            type: 'pie',
+                            data: dados_local,
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'top',
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Locais de Compra'
+                                    }
+                                }
+                            },
+                        };
+
+                        let myChart = new Chart(
+                            document.getElementById("buy_pie"),
+                            config
+                        )
+
+                        myChart.update();
+                    })
+                }
+            })
+    }
+
+    function atualizar_graficos_ano() {
+        let dados_ano = {
+            labels: [],
+            datasets: [{
+                label: 'total',
+                data: [],
+                backgroundColor: [],
+                cutout: 35,
+            }]
+        }
+
+        fetch("/dados/ano", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idServer: sessionStorage.ID_USUARIO,
+            })
+        })
+
+            .then((resposta) => {
+                if (resposta.ok) {
+                    resposta.json().then(json => {
+                    let anos_70 = 0;
+                    let anos_80 = 0;
+                    let anos_90 = 0;
+                    let anos_00 = 0;
+                    let anos_10 = 0;
+                    let anos_20 = 0;
+
+                    for (let i = 0; i < json.length; i++) {
+                        for (let quant = json[i].quantidade_ano; quant > 0; quant--) {
+                            if (json[i].ano < 1980) {
+                                anos_70 += 1
+                            }
+                            else if (json[i].ano < 1990) {
+                                anos_80 += 1
+                            }
+                            else if (json[i].ano < 2000) {
+                                anos_90 += 1
+                            }
+                            else if (json[i].ano < 2010) {
+                                anos_00 += 1
+                            }
+                            else if (json[i].ano < 2020) {
+                                anos_10 += 1
+                            }
+                            else {
+                                anos_20 += 1
+                            }
+                        }
+                    }
+
+                    let decadas = ["Anos 70", "Anos 80", "Anos 90", "Anos 2000", "Anos 2010", "Anos 2020"];
+                    let cor = [141, 203, 188];
+                    const diff = 30;
+
+                    for(let i = 0; i < decadas.length; i++){
+                        let cor1 = `rgb(${cor[0]}, ${cor[1]}, ${cor[2]})`
+                        dados_ano.datasets[0].backgroundColor.push(cor1)
+
+                        cor[0] = cor[0] - diff
+                        cor[1] = cor[1] - diff
+                        cor[2] = cor[2] - diff
+                    }
+                    let cores = [];
+                    
+                    let quant_decada = [anos_70, anos_80, anos_90, anos_00, anos_10, anos_20]
+
+                    dados_ano.labels = decadas
+                    dados_ano.datasets[0].data = quant_decada
+
+                const config = {
+                    type: 'doughnut',
+                    data: dados_ano,
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Ano de lançamento'
+                            }
+                        }
+                    },
+                };
+
+                let myChart = new Chart(
+                    document.getElementById("year_pie"),
+                    config
+                )
+
+                myChart.update();
+            })
+        }
+    }
+)}
+
+    function atualizar_kpis() {
         let kpi = document.getElementById("kpi")
 
         fetch("/dados/kpi", {
@@ -129,17 +291,17 @@
             .then((resposta) => {
                 if (resposta.ok) {
                     resposta.json().then(json => {
-                    let valor_medio =  Number(json[0].valor_medio);
-                    let quantidade_total = Number(json[0].quantidade_total)
-                    let valor_total = Number(json[0].valor_total);
-                    
-                    kpi.innerHTML = `Valor Total: R$${valor_total.toFixed(2)} <br>
+                        let valor_medio = Number(json[0].valor_medio);
+                        let quantidade_total = Number(json[0].quantidade_total)
+                        let valor_total = Number(json[0].valor_total);
+
+                        kpi.innerHTML = `Valor Total: R$${valor_total.toFixed(2)} <br>
                     Total de Filmes na coleção: ${quantidade_total} <br>
                     Média de preço por filme: R$${valor_medio.toFixed(2)}`
-                })
-            }
-    })
-    }   
+                    })
+                }
+            })
+    }
 
     atualizar_kpis()
 

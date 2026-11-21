@@ -12,4 +12,12 @@ router.post("/kpi", function (req, res) {
     dadosController.kpi(req, res);
 })
 
+router.post("/local_compra", function (req, res) {
+    dadosController.local_compra(req, res);
+})
+
+router.post("/ano", function (req, res) {
+    dadosController.ano(req, res);
+})
+
 module.exports = router;

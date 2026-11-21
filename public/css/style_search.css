@@ -79,7 +79,7 @@ body{
 }
 
 .movie_box{
-    width: fit-content;
+    width: 95%;
     height: 810px;
     border-radius: 0px 0px 10px 10px;
     border-style: solid;
@@ -273,13 +273,35 @@ button:hover{
 
 
 /* Estilização Dash */
-.dash_box{
+.row{
     display: flex;
     flex-direction: row;
 }
 
+
+.pie_graphs{
+    display: flex;
+    flex-direction: column;
+}
+
 .graph_pie{
-    width: 300px;
+    width: 400px;
+}
+
+.first_row{
+    display: flex;
+    flex-direction: row;
+}
+
+.kpi{
+    font-size: x-large;
+    padding: 30px;
+}
+
+.dashboard{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 @media (max-width: 1800px) {
@@ -289,6 +311,7 @@ button:hover{
 
     .movie_box{
         height: fit-content;
+        min-width: none;
     }
 }
 
@@ -298,6 +321,7 @@ button:hover{
     }
 
     .movie_box{
+        width: fit-content;
         height: fit-content;
     }
 }
