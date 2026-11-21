@@ -8,7 +8,8 @@ function genre(id) {
         JOIN compra ON compra.fk_filme = filme.idFilme
         JOIN colecao ON fk_colecao = colecao.idColecao
         WHERE colecao.idColecao = ${id}
-        GROUP BY genero.idGenero;
+        GROUP BY genero.idGenero
+        ORDER BY total DESC;
     `;
 
     return database.executar(instrucaoSql);
@@ -32,7 +33,8 @@ function local_compra(id){
         JOIN filme ON compra.fk_filme = filme.idFilme
         JOIN colecao ON compra.fk_colecao = colecao.idColecao
         WHERE colecao.idColecao = ${id}
-        GROUP BY local_compra.local;
+        GROUP BY local_compra.local
+        ORDER BY quantidade_local DESC;
     `;
 
     return database.executar(instrucaoSql);
@@ -40,12 +42,13 @@ function local_compra(id){
 
 function ano(id){
         var instrucaoSql = `
-        SELECT YEAR(dt_lancamento) AS 'ano', COUNT(YEAR(dt_lancamento)) AS 'quantidade_ano' FROM filme
+        SELECT decada AS 'ano', COUNT(*) AS 'quantidade_ano' FROM
+        (SELECT floor(YEAR(dt_lancamento) / 10) * 10 AS 'decada' FROM filme
         JOIN compra ON compra.fk_filme = filme.idFilme
         JOIN colecao ON fk_colecao = colecao.idColecao
-        WHERE colecao.idColecao = ${id}
-        GROUP BY YEAR(dt_lancamento)
-        ORDER BY YEAR(dt_lancamento);
+        WHERE colecao.idColecao = ${id}) d
+        GROUP BY decada
+        ORDER BY quantidade_ano DESC;
     `;
 
     return database.executar(instrucaoSql);
