@@ -38,7 +38,7 @@
                     Média de preço por filme: R$5.00
                 </div>
                 <div class="pie_graphs">
-                    <div class="center">
+                    <div class="center gap">
                         <div class="graph_pie">
                             <canvas id="genre_pie"></canvas>
                         </div>
@@ -97,11 +97,19 @@
                                 responsive: true,
                                 plugins: {
                                     legend: {
-                                        position: 'top',
+                                        position: 'left',
                                     },
                                     title: {
                                         display: true,
-                                        text: 'Genres'
+                                        text: 'Genres',
+                                        fullSize: false,
+                                        color: '#000000',
+                                        font: {
+                                            size: 25,
+                                            family: 'sans-serif',
+                                            weight: 'bold'
+                                        }
+
                                     }
                                 }
                             },
@@ -153,11 +161,17 @@
                                 responsive: true,
                                 plugins: {
                                     legend: {
-                                        position: 'top',
+                                        position: 'right',
                                     },
                                     title: {
                                         display: true,
-                                        text: 'Locais de Compra'
+                                        text: 'Locais de Compra',
+                                        color: '#000000',
+                                        font: {
+                                            size: 25,
+                                            family: 'sans-serif',
+                                            weight: 'bold'
+                                        }
                                     }
                                 }
                             },
@@ -201,50 +215,58 @@
                 if (resposta.ok) {
                     resposta.json().then(json => {
 
-                    // Mudança de cor dinâmica
-                    let cor = [141, 203, 188];
-                    const diff = 30;
+                        // Mudança de cor dinâmica
+                        let cor = [141, 203, 188];
+                        const diff = 30;
 
-                    for(let i = 0; i < json.length; i++){
-                        let cor1 = `rgb(${cor[0]}, ${cor[1]}, ${cor[2]})`
-                        dados_ano.datasets[0].backgroundColor.push(cor1);
+                        for (let i = 0; i < json.length; i++) {
+                            let cor1 = `rgb(${cor[0]}, ${cor[1]}, ${cor[2]})`
+                            dados_ano.datasets[0].backgroundColor.push(cor1);
 
-                        cor[0] = cor[0] - diff
-                        cor[1] = cor[1] - diff
-                        cor[2] = cor[2] - diff
+                            cor[0] = cor[0] - diff
+                            cor[1] = cor[1] - diff
+                            cor[2] = cor[2] - diff
 
-                        dados_ano.labels.push(json[i].ano)
-                        dados_ano.datasets[0].data.push(json[i].quantidade_ano)
-                    }
-            
-
-                const config = {
-                    type: 'doughnut',
-                    data: dados_ano,
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                            },
-                            title: {
-                                display: true,
-                                text: 'Ano de lançamento'
-                            }
+                            dados_ano.labels.push(json[i].ano)
+                            dados_ano.datasets[0].data.push(json[i].quantidade_ano)
                         }
-                    },
-                };
 
-                let myChart = new Chart(
-                    document.getElementById("year_pie"),
-                    config
-                )
 
-                myChart.update();
-            })
-        }
+                        const config = {
+                            type: 'doughnut',
+                            data: dados_ano,
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Ano de lançamento',
+                                        fullSize: false,
+                                        color: '#000000',
+                                        font: {
+                                            size: 25,
+                                            family: 'sans-serif',
+                                            weight: 'bold'
+                                        }
+                                    }
+                                }
+                            },
+                        };
+
+                        let myChart = new Chart(
+                            document.getElementById("year_pie"),
+                            config
+                        )
+
+                        myChart.update();
+                    })
+                }
+            }
+            )
     }
-)}
 
     function atualizar_kpis() {
         let kpi = document.getElementById("kpi")

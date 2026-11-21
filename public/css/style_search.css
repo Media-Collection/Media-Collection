@@ -285,12 +285,11 @@ button:hover{
 }
 
 .graph_pie{
-    width: 400px;
+    width: 370px;
 }
 
-.first_row{
-    display: flex;
-    flex-direction: row;
+.gap{
+    gap: 100px;
 }
 
 .kpi{
@@ -300,8 +299,8 @@ button:hover{
 
 .dashboard{
     display: flex;
-    justify-content: space-evenly;
     align-items: center;
+    padding: 40px;
 }
 
 @media (max-width: 1800px) {
