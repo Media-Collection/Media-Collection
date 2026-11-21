@@ -15,7 +15,7 @@ function genre(req, res) {
                         res.status(403).send("Sem filmes");
                     }
                     else{
-                        console.log(resultado);
+                        // console.log(resultado);
                         res.json(resultado);
                     }
                 })
@@ -50,7 +50,7 @@ function kpi(req, res){
                 })
             .catch(
                 function (erro) {
-                    console.log(erro);
+                    // console.log(erro);
                     console.log("\nHouve um erro ao pesquisar o genero dos filmes! Erro: ", erro.sqlMessage);
                     res.status(500).json(erro.sqlMessage);
                 }
@@ -73,7 +73,7 @@ function local_compra(req, res){
                         res.status(403).send("Sem filmes");
                     }
                     else{
-                        console.log(resultado);
+                        // console.log(resultado);
                         res.json(resultado);
                     }
                 })
@@ -102,6 +102,35 @@ function ano(req, res){
                         res.status(403).send("Sem filmes");
                     }
                     else{
+                        // console.log(resultado);
+                        res.json(resultado);
+                    }
+                })
+            .catch(
+                function (erro) {
+                    console.log(erro);
+                    console.log("\nHouve um erro ao pesquisar as datas de lançamento! Erro: ", erro.sqlMessage);
+                    res.status(500).json(erro.sqlMessage);
+                }
+            );
+}
+}
+
+function timeline(req, res){
+ var id = req.body.idServer;
+
+    if (req == undefined) {
+        res.status(400).send("Erro: undefined!");
+    } else {
+        dadosModel.timeline(id)
+            .then((resultado)  => {
+                    //console.log(`\nResultados encontrados: ${resultadoSearch.length}`);
+                    //console.log(`Resultados: ${JSON.stringify(resultadoSearch)}`); // transforma JSON em String
+                    if (resultado.length == 0){
+                        console.log('Sem filmes cadastrados')
+                        res.status(403).send("Sem filmes");
+                    }
+                    else{
                         console.log(resultado);
                         res.json(resultado);
                     }
@@ -116,8 +145,10 @@ function ano(req, res){
 }
 }
 
+
 module.exports = {
     local_compra,
+    timeline,
     genre,
     kpi,
     ano

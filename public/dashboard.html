@@ -31,13 +31,13 @@
     </div>
     <section class="center_column">
         <main class="movie_box" id="movie_box">
-            <div class="dashboard">
+            <div class="dashboard center">
                 <div id="kpi" class="kpi">
                     Valor Total: R$100.00 <br>
                     Total de Filmes na coleção: 250 <br>
                     Média de preço por filme: R$5.00
                 </div>
-                <div class="pie_graphs">
+                <div class="pie_graphs center">
                     <div class="center gap">
                         <div class="graph_pie">
                             <canvas id="genre_pie"></canvas>
@@ -45,13 +45,13 @@
                         <div class="graph_pie">
                             <canvas id="buy_pie"></canvas>
                         </div>
-                    </div>
-                    <div class="center">
                         <div class="graph_pie">
                             <canvas id="year_pie"></canvas>
                         </div>
                     </div>
-
+                    <div class="center timeline">
+                        <canvas id="timeline"></canvas>
+                    </div>
                 </div>
             </div>
         </main>
@@ -66,9 +66,12 @@
         let dados_genre = {
             labels: [],
             datasets: [{
-                label: 'total',
+                label: 'Total',
                 data: [],
-                cutout: 35
+                cutout: 35,
+                backgroundColor: [],
+                borderColor: '#000000',
+                borderWidth: 2
             }]
         }
 
@@ -85,7 +88,17 @@
             .then((resposta) => {
                 if (resposta.ok) {
                     resposta.json().then(json => {
+                        let cor = [226, 161, 193];
+                        const diff = 30;
+
                         for (let i = 0; i < json.length; i++) {
+                            let cor1 = `rgb(${cor[0]}, ${cor[1]}, ${cor[2]})`
+                            dados_genre.datasets[0].backgroundColor.push(cor1);
+
+                            cor[0] = cor[0] - diff
+                            cor[1] = cor[1] - diff
+                            cor[2] = cor[2] - diff
+
                             dados_genre.labels.push(json[i].genero)
                             dados_genre.datasets[0].data.push(json[i].total)
                         }
@@ -97,11 +110,11 @@
                                 responsive: true,
                                 plugins: {
                                     legend: {
-                                        position: 'left',
+                                        position: 'bottom',
                                     },
                                     title: {
                                         display: true,
-                                        text: 'Genres',
+                                        text: 'Gêneros',
                                         fullSize: false,
                                         color: '#000000',
                                         font: {
@@ -130,9 +143,12 @@
         let dados_local = {
             labels: [],
             datasets: [{
-                label: 'total',
+                label: 'Total',
                 data: [],
-                cutout: 35
+                cutout: 35,
+                backgroundColor: [],
+                borderColor: '#000000',
+                borderWidth: 2
             }]
         }
 
@@ -149,7 +165,17 @@
             .then((resposta) => {
                 if (resposta.ok) {
                     resposta.json().then(json => {
+                        let cor = [149, 138, 112];
+                        const diff = 30;
+
                         for (let i = 0; i < json.length; i++) {
+                            let cor1 = `rgb(${cor[0]}, ${cor[1]}, ${cor[2]})`
+                            dados_local.datasets[0].backgroundColor.push(cor1);
+
+                            cor[0] = cor[0] - diff
+                            cor[1] = cor[1] - diff
+                            cor[2] = cor[2] - diff
+
                             dados_local.labels.push(json[i].local)
                             dados_local.datasets[0].data.push(json[i].quantidade_local)
                         }
@@ -161,11 +187,11 @@
                                 responsive: true,
                                 plugins: {
                                     legend: {
-                                        position: 'right',
+                                        position: 'bottom',
                                     },
                                     title: {
                                         display: true,
-                                        text: 'Locais de Compra',
+                                        text: 'Origens',
                                         color: '#000000',
                                         font: {
                                             size: 25,
@@ -192,10 +218,10 @@
         let dados_ano = {
             labels: [],
             datasets: [{
-                label: 'total',
+                label: 'Total',
                 data: [],
-                backgroundColor: [],
                 cutout: 35,
+                backgroundColor: [],
                 borderColor: '#000000',
                 borderWidth: 2
             }]
@@ -288,15 +314,97 @@
                         let quantidade_total = Number(json[0].quantidade_total)
                         let valor_total = Number(json[0].valor_total);
 
-                        kpi.innerHTML = `Valor Total: R$${valor_total.toFixed(2)} <br>
-                    Total de Filmes na coleção: ${quantidade_total} <br>
-                    Média de preço por filme: R$${valor_medio.toFixed(2)}`
+                        kpi.innerHTML = `<div class="kpi_total">Valor Total da Coleção: R$${valor_total.toFixed(2)} <br>
+                    Total de Filmes: ${quantidade_total} <br>
+                    Média de preço por filme: R$${valor_medio.toFixed(2)} </div>`
                     })
                 }
             })
     }
 
+    function atualizar_timeline() {
+        let dados_timeline = {
+            labels: [],
+            datasets: [{
+                label: 'Total',
+                data: [],
+                cutout: 35,
+                backgroundColor: 'rgb(141, 203, 188)',
+                borderColor: '#000000',
+                borderWidth: 2
+            }]
+        }
+
+        fetch("/dados/timeline", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idServer: sessionStorage.ID_USUARIO,
+            })
+        })
+
+            .then((resposta) => {
+                if (resposta.ok) {
+                    resposta.json().then(json => {
+
+                        for (let i = 0; i < json.length; i++) {
+                            let data = json[i].data
+                            dados_timeline.labels.push(data.slice(0, 10))
+                            dados_timeline.datasets[0].data.push(json[i].total)
+                        }
+
+
+                        const config = {
+                            type: 'line',
+                            data: dados_timeline,
+                            options: {
+                                responsive: true,
+                                scales: {
+                                   y: {
+                                    title: {
+                                        display: true,
+                                        text: "Quantidade de Filmes"
+                                    },
+                                    ticks: {
+                                        stepSize: 1
+                                    }
+                                   }
+                                },
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Progresso da Coleção',
+                                        fullSize: false,
+                                        color: '#000000',
+                                        font: {
+                                            size: 25,
+                                            family: 'sans-serif',
+                                            weight: 'bold'
+                                        }
+                                    }
+                                }
+                            },
+                        };
+
+                        let myChart = new Chart(
+                            document.getElementById("timeline"),
+                            config
+                        )
+
+                        myChart.update();
+                    })
+                }
+            }
+            )
+    }
+
     atualizar_kpis()
+    atualizar_timeline()
 
 
     if (validarSessaoAddFilm()) {

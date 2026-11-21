@@ -282,14 +282,19 @@ button:hover{
 .pie_graphs{
     display: flex;
     flex-direction: column;
+    gap: 20px;
 }
 
 .graph_pie{
-    width: 370px;
+    width: 320px;
+}
+
+.timeline{
+    width: 85%;
 }
 
 .gap{
-    gap: 100px;
+    gap: 20px;
 }
 
 .kpi{
@@ -297,10 +302,18 @@ button:hover{
     padding: 30px;
 }
 
+.kpi div{
+    background-color: white;
+    border-radius: 4px;
+    border: 2px solid black;
+    padding: 10px;
+}
+
 .dashboard{
     display: flex;
     align-items: center;
-    padding: 40px;
+    justify-content: space-between;
+    padding: 20px;
 }
 
 @media (max-width: 1800px) {

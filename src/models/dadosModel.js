@@ -54,8 +54,21 @@ function ano(id){
     return database.executar(instrucaoSql);
 }
 
+function timeline(id){
+            var instrucaoSql = `
+        SELECT dt_compra AS 'data', SUM(COUNT(fk_filme)) OVER (ORDER BY dt_compra) AS 'total' FROM compra 
+        JOIN colecao ON fk_colecao = colecao.idColecao
+        WHERE colecao.idColecao = ${id}
+        GROUP BY dt_compra
+        ORDER BY dt_compra;
+    `;
+
+    return database.executar(instrucaoSql);
+}
+
 module.exports = {
     local_compra,
+    timeline,
     genre,
     kpi,
     ano

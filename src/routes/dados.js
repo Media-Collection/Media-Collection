@@ -20,4 +20,8 @@ router.post("/ano", function (req, res) {
     dadosController.ano(req, res);
 })
 
+router.post("/timeline", function (req, res) {
+    dadosController.timeline(req, res);
+})
+
 module.exports = router;
