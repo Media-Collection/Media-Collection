@@ -1,4 +1,4 @@
-    const max_filmes = 14;
+    var max_filmes = 14;
     var pag_num = 1;
     
     
@@ -10,7 +10,17 @@
     let midia = [];
     let pos = 0;
 
+
+    function check_fullscreen(){
+        if(window.innerHeight == screen.height) {
+            max_filmes = 12;
+        }else{
+            max_filmes = 14;
+        }
+    }
+
     function search_id() {
+        check_fullscreen()
         var search = ipt_filme.value;
         var id = sessionStorage.ID_USUARIO;
 
@@ -115,6 +125,7 @@
     }
 
     function search() {
+        check_fullscreen()
         var search = ipt_filme.value;
         titulos = [];
         data_lancamento = [];

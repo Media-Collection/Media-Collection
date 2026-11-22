@@ -143,6 +143,11 @@
         search()
     };
 
+    let fullscreen = window.matchMedia("(display-mode: fullscreen)");
+
+    fullscreen.addEventListener("change", (e) => {
+        search()
+    })
 </script>
 
 </html>
