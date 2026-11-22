@@ -190,6 +190,7 @@
                 }
                 else {
                     msg.innerHTML = `<div class="movie_div" id=""> <img class="poster"> <label class="movie_title">Nenhum filme encontrado...</label> <label class="year"></label> </div>`
+                    page_button.innerHTML = `<button id="1" onclick="page_change(this.id)" class="selected"> 1 </button>`;
                 }
             })
     }

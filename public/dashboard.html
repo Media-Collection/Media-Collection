@@ -32,6 +32,7 @@
     <section class="center_column">
         <main class="movie_box" id="movie_box">
             <div class="dashboard center">
+                
                 <div id="kpi" class="kpi">
                 </div>
                 <div class="pie_graphs center">
@@ -59,10 +60,10 @@
     <!-- <button onclick="buscar()">Procurar o Filme</button><br><br> -->
 </body>
 <script>
+    let porcentual = '';
     let genero_comum = '';
     let origem_comum = '';
     let ano_comum = '';
-    let atualizou = false;
 
     function atualizar_graficos_genero() {
         let dados_genre = {
@@ -114,6 +115,9 @@
                                 plugins: {
                                     legend: {
                                         position: 'bottom',
+                                        labels: {
+                                            color: '#000000'
+                                        }
                                     },
                                     title: {
                                         display: true,
@@ -121,7 +125,7 @@
                                         fullSize: false,
                                         color: '#000000',
                                         font: {
-                                            size: 25,
+                                            size: 20,
                                             family: 'sans-serif',
                                             weight: 'bold'
                                         }
@@ -194,13 +198,16 @@
                                 plugins: {
                                     legend: {
                                         position: 'bottom',
+                                        labels: {
+                                            color: '#000000'
+                                        }
                                     },
                                     title: {
                                         display: true,
                                         text: 'Origens',
                                         color: '#000000',
                                         font: {
-                                            size: 25,
+                                            size: 20,
                                             family: 'sans-serif',
                                             weight: 'bold'
                                         }
@@ -275,6 +282,9 @@
                                 plugins: {
                                     legend: {
                                         position: 'bottom',
+                                        labels: {
+                                            color: '#000000'
+                                        }
                                     },
                                     title: {
                                         display: true,
@@ -282,7 +292,7 @@
                                         fullSize: false,
                                         color: '#000000',
                                         font: {
-                                            size: 25,
+                                            size: 20,
                                             family: 'sans-serif',
                                             weight: 'bold'
                                         }
@@ -335,14 +345,15 @@
                         <b> Ano de lançamento mais comum: </b> Anos ${ano_comum} </div>`
                             kpi.innerHTML += `<div class="kpi_total"> <b> Valor Total da Coleção: </b> R$${valor_total.toFixed(2)} <br>
                         <b> Quantidade de Filmes: </b> ${quantidade_total} <br>
-                        <b> Média de preço por filme: </b> R$${valor_medio.toFixed(2)} </div>`
+                        <b> Média de preço por filme: </b> R$${valor_medio.toFixed(2)} <br>
+                        <b> Aumento percentual nos últimos 30 dias: </b> <img src="img/icon.png" alt=""> <b class="green"> ${porcentual}%  </b>  </div>`
                     })
                 }
             })
     }
 
     function atualizar_kpi_comum(){
-        if(genero_comum != '' && origem_comum != '' && ano_comum != ''){
+        if(genero_comum != '' && origem_comum != '' && ano_comum != '' && porcentual != ''){
             atualizar_kpis()
         }
         
@@ -375,11 +386,31 @@
                 if (resposta.ok) {
                     resposta.json().then(json => {
 
+                        let total_antes = 0;
+                        let total_depois = 0;
+
+                        var date = new Date();
+                        date.setDate(date.getDate() - 30);
+                        var dateString = date.toISOString().split('T')[0]; // "2016-06-08"
+
+                        console.log(date);
+                        console.log(dateString);
+
                         for (let i = 0; i < json.length; i++) {
-                            let data = json[i].data
-                            dados_timeline.labels.push(data.slice(0, 10))
+                            let data = new Date(json[i].data)
+                            if(data < date){
+                                total_antes = json[i].total;
+                                console.log("Total antes")
+                            } 
+                            else{
+                                total_depois = json[i].total;
+                                console.log("Compra depois")
+                            }
+                            dados_timeline.labels.push(data.toLocaleDateString("pt-BR"))
                             dados_timeline.datasets[0].data.push(json[i].total)
                         }
+
+                        porcentual = ((total_depois - total_antes) / total_antes)*100;
 
 
                         const config = {
@@ -391,16 +422,26 @@
                                    y: {
                                     title: {
                                         display: true,
-                                        text: "Quantidade de Filmes"
+                                        text: "Quantidade de Filmes",
+                                        color: '#000000',
                                     },
                                     ticks: {
-                                        stepSize: 1
+                                        stepSize: 1,
+                                        color: '#000000'
+                                    }
+                                   },
+                                   x: {
+                                    ticks: {
+                                        color: '#000000'
                                     }
                                    }
                                 },
                                 plugins: {
                                     legend: {
                                         position: 'bottom',
+                                        labels: {
+                                            color: '#000000'
+                                        }
                                     },
                                     title: {
                                         display: true,
@@ -408,7 +449,7 @@
                                         fullSize: false,
                                         color: '#000000',
                                         font: {
-                                            size: 25,
+                                            size: 20,
                                             family: 'sans-serif',
                                             weight: 'bold'
                                         }
@@ -423,6 +464,7 @@
                         )
 
                         myChart.update();
+                        atualizar_kpi_comum()
                     })
                 }
             }
