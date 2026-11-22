@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/apiFetch.js"></script>
+    <script src="js/sessao.js"></script>
+    <script src="js/search.js"></script>
+    <link rel="stylesheet" href="css/style_search.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com" rel="stylesheet">
+    <title>Search</title>
+</head>
+
+<body onload="" class="search_main">
+    <div class="button_line">
+        <div id="left" class="left">
+            <a href="index.html"><img class="logo" src="img\Logo v2.png" alt="logo"><a href="Home.html"></a>
+                <a href="Search.html"><button class="films attached_button">Films</button></a>
+                <a href="collection.html"><button class="collection attached_button">My Collection</button></a>
+                <a href="dashboard.html"><button class="selected dash attached_button">Dashboard</button></a>
+        </div>
+        <div id="right" class="right">
+            <a href="login.html"><button class="basic_button"> Sign in </button></a>
+            <a href="Create.html"><button class="create_account"> Create Account </button></a>
+        </div>
+    </div>
+    </div>
+    <section class="center_column">
+        <main class="movie_box" id="movie_box">
+            <div class="dashboard center">
+                
+                <div id="kpi" class="kpi">
+                </div>
+                <div class="pie_graphs center">
+                    <div class="center gap">
+                        <div class="graph_pie">
+                            <canvas id="genre_pie"></canvas>
+                        </div>
+                        <div class="graph_pie">
+                            <canvas id="buy_pie"></canvas>
+                        </div>
+                        <div class="graph_pie">
+                            <canvas id="year_pie"></canvas>
+                        </div>
+                    </div>
+                    <div class="center timeline">
+                        <canvas id="timeline"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+    </div>
+
+
+    <!-- <button onclick="buscar()">Procurar o Filme</button><br><br> -->
+</body>
+<script>
+    let porcentual = '';
+    let genero_comum = '';
+    let origem_comum = '';
+    let ano_comum = '';
+
+    function atualizar_graficos_genero() {
+        let dados_genre = {
+            labels: [],
+            datasets: [{
+                label: 'Total',
+                data: [],
+                cutout: 35,
+                backgroundColor: [],
+                borderColor: '#000000',
+                borderWidth: 2
+            }]
+        }
+
+        fetch("/dados/genre", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idServer: sessionStorage.ID_USUARIO,
+            })
+        })
+
+            .then((resposta) => {
+                if (resposta.ok) {
+                    resposta.json().then(json => {
+                        let cor = [226, 161, 193];
+                        const diff = 30;
+                        genero_comum = json[0].genero + " (" + json[0].total + ")";
+
+                        for (let i = 0; i < json.length; i++) {
+                            let cor1 = `rgb(${cor[0]}, ${cor[1]}, ${cor[2]})`
+                            dados_genre.datasets[0].backgroundColor.push(cor1);
+
+                            cor[0] = cor[0] - diff
+                            cor[1] = cor[1] - diff
+                            cor[2] = cor[2] - diff
+
+                            dados_genre.labels.push(json[i].genero)
+                            dados_genre.datasets[0].data.push(json[i].total)
+                        }
+
+                        const config = {
+                            type: 'pie',
+                            data: dados_genre,
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                        labels: {
+                                            color: '#000000'
+                                        }
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Gêneros',
+                                        fullSize: false,
+                                        color: '#000000',
+                                        font: {
+                                            size: 20,
+                                            family: 'sans-serif',
+                                            weight: 'bold'
+                                        }
+
+                                    }
+                                }
+                            },
+                        };
+
+                        let myChart = new Chart(
+                            document.getElementById("genre_pie"),
+                            config
+                        )
+
+                        atualizar_kpi_comum()
+                        myChart.update();
+                    })
+                }
+            })
+    }
+
+    function atualizar_graficos_local() {
+        let dados_local = {
+            labels: [],
+            datasets: [{
+                label: 'Total',
+                data: [],
+                cutout: 35,
+                backgroundColor: [],
+                borderColor: '#000000',
+                borderWidth: 2
+            }]
+        }
+
+        fetch("/dados/local_compra", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idServer: sessionStorage.ID_USUARIO,
+            })
+        })
+
+            .then((resposta) => {
+                if (resposta.ok) {
+                    resposta.json().then(json => {
+                        let cor = [149, 138, 112];
+                        const diff = 30;
+
+                        origem_comum = json[0].local + " (" + json[0].quantidade_local + ")";
+
+                        for (let i = 0; i < json.length; i++) {
+                            let cor1 = `rgb(${cor[0]}, ${cor[1]}, ${cor[2]})`
+                            dados_local.datasets[0].backgroundColor.push(cor1);
+
+                            cor[0] = cor[0] - diff
+                            cor[1] = cor[1] - diff
+                            cor[2] = cor[2] - diff
+
+                            dados_local.labels.push(json[i].local)
+                            dados_local.datasets[0].data.push(json[i].quantidade_local)
+                        }
+
+                        const config = {
+                            type: 'pie',
+                            data: dados_local,
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                        labels: {
+                                            color: '#000000'
+                                        }
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Origens',
+                                        color: '#000000',
+                                        font: {
+                                            size: 20,
+                                            family: 'sans-serif',
+                                            weight: 'bold'
+                                        }
+                                    }
+                                }
+                            },
+                        };
+
+                        let myChart = new Chart(
+                            document.getElementById("buy_pie"),
+                            config
+                        )
+
+                        atualizar_kpi_comum()
+                        myChart.update();
+                    })
+                }
+            })
+    }
+
+    function atualizar_graficos_ano() {
+        let dados_ano = {
+            labels: [],
+            datasets: [{
+                label: 'Total',
+                data: [],
+                cutout: 35,
+                backgroundColor: [],
+                borderColor: '#000000',
+                borderWidth: 2
+            }]
+        }
+
+        fetch("/dados/ano", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idServer: sessionStorage.ID_USUARIO,
+            })
+        })
+
+            .then((resposta) => {
+                if (resposta.ok) {
+                    resposta.json().then(json => {
+
+                        // Mudança de cor dinâmica
+                        let cor = [141, 203, 188];
+                        const diff = 30;
+
+                        ano_comum = json[0].ano + " (" + json[0].quantidade_ano + ")";
+
+                        for (let i = 0; i < json.length; i++) {
+                            let cor1 = `rgb(${cor[0]}, ${cor[1]}, ${cor[2]})`
+                            dados_ano.datasets[0].backgroundColor.push(cor1);
+
+                            cor[0] = cor[0] - diff
+                            cor[1] = cor[1] - diff
+                            cor[2] = cor[2] - diff
+
+                            dados_ano.labels.push(json[i].ano)
+                            dados_ano.datasets[0].data.push(json[i].quantidade_ano)
+                        }
+
+
+                        const config = {
+                            type: 'doughnut',
+                            data: dados_ano,
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                        labels: {
+                                            color: '#000000'
+                                        }
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Ano de lançamento',
+                                        fullSize: false,
+                                        color: '#000000',
+                                        font: {
+                                            size: 20,
+                                            family: 'sans-serif',
+                                            weight: 'bold'
+                                        }
+                                    }
+                                }
+                            },
+                        };
+
+                        let myChart = new Chart(
+                            document.getElementById("year_pie"),
+                            config
+                        )
+
+                        atualizar_kpi_comum()
+                        myChart.update();
+                    })
+                }
+            }
+            )
+    }
+
+    async function atualizar_kpis() {
+        let kpi = document.getElementById("kpi")
+
+
+
+        await fetch("/dados/kpi", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idServer: sessionStorage.ID_USUARIO,
+            })
+        })
+
+            .then((resposta) => {
+                if (resposta.ok) {
+                    resposta.json().then(json => {
+                        let valor_medio = Number(json[0].valor_medio);
+                        let quantidade_total = Number(json[0].quantidade_total)
+                        let valor_total = Number(json[0].valor_total);
+
+                        
+
+                        kpi.innerHTML = `
+                        <label> Bem vindo, ${sessionStorage.NOME_USUARIO} </label>
+                        <div class="kpi_total"> <b> Gênero mais comum: </b> ${genero_comum} <br>
+                        <b> Origem mais comum: </b> ${origem_comum} <br>
+                        <b> Ano de lançamento mais comum: </b> Anos ${ano_comum} </div>`
+                            kpi.innerHTML += `<div class="kpi_total"> <b> Valor Total da Coleção: </b> R$${valor_total.toFixed(2)} <br>
+                        <b> Quantidade de Filmes: </b> ${quantidade_total} <br>
+                        <b> Média de preço por filme: </b> R$${valor_medio.toFixed(2)} <br>
+                        <b> Aumento percentual nos últimos 30 dias: </b> <img src="img/icon.png" alt=""> <b class="green"> ${porcentual}%  </b>  </div>`
+                    })
+                }
+            })
+    }
+
+    function atualizar_kpi_comum(){
+        if(genero_comum != '' && origem_comum != '' && ano_comum != '' && porcentual != ''){
+            atualizar_kpis()
+        }
+        
+    }
+
+    function atualizar_timeline() {
+        let dados_timeline = {
+            labels: [],
+            datasets: [{
+                label: 'Total',
+                data: [],
+                cutout: 35,
+                backgroundColor: 'rgb(141, 203, 188)',
+                borderColor: '#000000',
+                borderWidth: 2
+            }]
+        }
+
+        fetch("/dados/timeline", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idServer: sessionStorage.ID_USUARIO,
+            })
+        })
+
+            .then((resposta) => {
+                if (resposta.ok) {
+                    resposta.json().then(json => {
+
+                        let total_antes = 0;
+                        let total_depois = 0;
+
+                        var date = new Date();
+                        date.setDate(date.getDate() - 30);
+                        var dateString = date.toISOString().split('T')[0]; // "2016-06-08"
+
+                        console.log(date);
+                        console.log(dateString);
+
+                        for (let i = 0; i < json.length; i++) {
+                            let data = new Date(json[i].data)
+                            if(data < date){
+                                total_antes = json[i].total;
+                                console.log("Total antes")
+                            } 
+                            else{
+                                total_depois = json[i].total;
+                                console.log("Compra depois")
+                            }
+                            dados_timeline.labels.push(data.toLocaleDateString("pt-BR"))
+                            dados_timeline.datasets[0].data.push(json[i].total)
+                        }
+
+                        porcentual = ((total_depois - total_antes) / total_antes)*100;
+
+
+                        const config = {
+                            type: 'line',
+                            data: dados_timeline,
+                            options: {
+                                responsive: true,
+                                scales: {
+                                   y: {
+                                    title: {
+                                        display: true,
+                                        text: "Quantidade de Filmes",
+                                        color: '#000000',
+                                    },
+                                    ticks: {
+                                        stepSize: 1,
+                                        color: '#000000'
+                                    }
+                                   },
+                                   x: {
+                                    ticks: {
+                                        color: '#000000'
+                                    }
+                                   }
+                                },
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                        labels: {
+                                            color: '#000000'
+                                        }
+                                    },
+                                    title: {
+                                        display: true,
+                                        text: 'Progresso da Coleção',
+                                        fullSize: false,
+                                        color: '#000000',
+                                        font: {
+                                            size: 20,
+                                            family: 'sans-serif',
+                                            weight: 'bold'
+                                        }
+                                    }
+                                }
+                            },
+                        };
+
+                        let myChart = new Chart(
+                            document.getElementById("timeline"),
+                            config
+                        )
+
+                        myChart.update();
+                        atualizar_kpi_comum()
+                    })
+                }
+            }
+            )
+    }
+
+    atualizar_kpis()
+    atualizar_timeline()
+    atualizar_graficos_ano();
+    atualizar_graficos_genero();
+    atualizar_graficos_local();
+
+
+    if (validarSessaoAddFilm()) {
+        let up_buttons = document.getElementById("right");
+        up_buttons.innerHTML = '<button onclick="limparSessao()" class="selected basic_button"> Sair </button>'
+    } else {
+        window.location = "../login.html";
+    }
+</script>
+
+</html>

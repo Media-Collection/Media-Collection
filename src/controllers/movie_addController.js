@@ -24,6 +24,28 @@ function adicionar(req, res) {
     }
 }
 
+function remover(req, res){
+    var id = req.body.idServer;
+    var id_filme = req.body.filme_idServer;
+
+    if (req == undefined) {
+        res.status(400).send("Erro: undefined!");
+    } else {
+        movie_addModel.remover(id, id_filme)
+            .then((resultado) => {
+                console.log(resultado)
+                console.log(`Filme ${id_filme} removido da coleção ${id}`)
+                res.json(resultado);
+            })
+            .catch(function (erro) {
+                console.log(erro);
+                console.log("\nHouve um erro ao remover o filme da coleção! Erro: ", erro.sqlMessage);
+                res.status(500).json(erro.sqlMessage);
+            })
+    }
+}
+
 module.exports = {
-    adicionar
+    adicionar,
+    remover
 }

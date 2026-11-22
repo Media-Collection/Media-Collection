@@ -61,23 +61,24 @@
 
             if (validarSessaoAddFilm()) {
                 add_box.innerHTML = `
-        <b> Título:  ${titulos[id]} <br> Data de Lançamento:  ${(data_lancamento[id]).slice(0, 10)} <br> Gênero:  ${genero[id]} <br><br></b> <br> Data de Compra: <input type="date" id="ipt_data"><br>
-    Valor da Compra: <input type="number" id="ipt_valor"><br>
-    Local de Compra: <select name="" id="ipt_local">
-        <option value="1">Sebo</option>
-        <option value="2">Bazar</option>
-        <option value="3">Outros</option>
-        <option value="4">Internet</option>
-        <option value="5">Presente</option>
-    </select><br>
-    Tipo de mídia: <select name="" id="ipt_midia">
-        <option value="1">DVD</option>
-        <option value="2">Blu-ray</option>
-        <option value="3">VHS</option>
-        <option value="4">4K UHD</option>
-        <option value="5">UMD</option>
-    </select><br><br>
-    <button class="selected" onclick="registrar(${id_filme[id]})"> Adicionar à coleção </button> `
+                    <b> Título:  ${titulos[id]} <br> Data de Lançamento:  ${(data_lancamento[id])} <br> Gênero:  ${generos[id]} <br><br></b> <br> 
+                    Data de Compra: <input type="date" id="ipt_data" min="2020-01-01" max="2027-12-31" value="${sessionStorage.LAST_DATE_USUARIO}"><br>
+                    Valor da Compra: <input type="number" id="ipt_valor" value="${sessionStorage.LAST_VALUE_USUARIO}"><br>
+                    Local de Compra: <select name="" id="ipt_local">
+                        <option value="1">Sebo</option>
+                        <option value="2">Bazar</option>
+                        <option value="3">Outros</option>
+                        <option value="4">Internet</option>
+                        <option value="5">Presente</option>
+                    </select><br>
+                    Tipo de mídia: <select name="" id="ipt_midia">
+                        <option value="1">DVD</option>
+                        <option value="2">Blu-ray</option>
+                        <option value="3">VHS</option>
+                        <option value="4">4K UHD</option>
+                        <option value="5">UMD</option>
+                    </select><br><br>
+                    <button class="selected" onclick="registrar(${id_filme[id]})"> Adicionar à coleção </button> `
             } else {
                 add_box.innerHTML = `<b> Você precisa estar logado para adicionar filmes à sua coleção </b>`
             }
@@ -97,7 +98,9 @@
         let valor = Number(ipt_valor.value);
         let local = ipt_local.value;
         let midia = ipt_midia.value;
-        console.log(data);
+
+        sessionStorage.LAST_DATE_USUARIO = data;
+        sessionStorage.LAST_VALUE_USUARIO = valor;
 
         if(!data || !valor || !local || !midia){
             alert("Todos os valores devem ser preenchidos")
@@ -120,8 +123,10 @@
 
             .then((resposta) => {
                 if (resposta.ok) {
-                    alert("Filme adicionado á coleção!")
+                    alert(`Filme ${titulos[id_filme.indexOf(id)]} adicionado á coleção!`)
                     console.log("Filme adicionado!")
+                    //last_local = local;
+                    //last_midia = midia;
                     exibir(0)
                 }
                 else {
@@ -138,6 +143,11 @@
         search()
     };
 
+    let fullscreen = window.matchMedia("(display-mode: fullscreen)");
+
+    fullscreen.addEventListener("change", (e) => {
+        search()
+    })
 </script>
 
 </html>

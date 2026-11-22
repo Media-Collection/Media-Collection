@@ -9,7 +9,15 @@ function adicionar(id, filme, data, valor, local, midia) {
     return database.executar(instrucaoSql);
 }
 
+function remover(id, idFilme){
+    var instrucaoSql = `
+            DELETE FROM compra WHERE fk_filme = ${idFilme} AND fk_colecao = ${id};
+    `;
+    
+    return database.executar(instrucaoSql);
+}
 
 module.exports = {
-    adicionar
+    adicionar,
+    remover
 };

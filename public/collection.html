@@ -30,6 +30,11 @@
     </div>
     </div>
     <section class="center_column">
+        <div class="add_box" style="display: none;" id="add_box">
+            Título: ${Filme} <br>
+            Data de Lançamento: ${data} <br>
+            gênero: ${genero} <br><br>
+        </div>
         <main class="movie_box" id="movie_box">
             <div class="poster_grid" id="msg">
                 <div class="movie_div"> <img class="poster"> <label class="movie_title">titulo</label> </div>
@@ -45,6 +50,60 @@
         pag_num = Number(pag)
         search_id()
     };
+
+    function exibir(id) {
+        let add_box = document.getElementById("add_box");
+
+        if (add_box.style.display == "none") {
+            add_box.style.display = "block";
+
+            if (validarSessaoAddFilm()) {
+                add_box.innerHTML = `
+                    <b> Título: </b> ${titulos[id]} <br> <b> Data de Lançamento: </b> ${(data_lancamento[id])} </b> <br> <b> Gênero: </b> ${generos[id]} <br><br><br> 
+                    <b> Data de Compra: </b> ${dt_compra[id]} <br>
+                    <b> Valor da Compra: </b> R$${valor[id]} <br>
+                    <b> Local de Compra: </b> ${local[id]} <br>
+                    <b> Tipo de mídia: </b> ${midia[id]} <br><br>
+                    <button class="selected" onclick="remover(${id_filme[id]})"> Remover da coleção </button> `
+            } else {
+                add_box.innerHTML = `<b> Você precisa estar logado para visualizar os filmes da sua coleção! </b>`
+            }
+        } else {
+            add_box.style.display = "none";
+        }
+    };
+
+    function remover(id){
+        fetch("/movies/retirar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idServer: sessionStorage.ID_USUARIO,
+                filme_idServer: id,
+            })
+        })
+
+            .then((resposta) => {
+                if (resposta.ok) {
+                    alert("Filme retirado da coleção com sucesso")
+                    exibir(0)
+                    search_id()
+                }
+
+                else{
+                    alert("Erro ao remover o item da coleção, tente novamente")
+                }
+        })
+    }
+
+    let fullscreen = window.matchMedia("(display-mode: fullscreen)");
+
+    fullscreen.addEventListener("change", (e) => {
+        search_id()
+    })
+
 </script>
 
 </html>
