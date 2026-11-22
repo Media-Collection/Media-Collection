@@ -14,7 +14,6 @@ function remover(id, idFilme){
             DELETE FROM compra WHERE fk_filme = ${idFilme} AND fk_colecao = ${id};
     `;
     
-    console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql);
 }
 

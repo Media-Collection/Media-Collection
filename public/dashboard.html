@@ -15,7 +15,7 @@
     <title>Search</title>
 </head>
 
-<body onload="atualizar_graficos_genero(), atualizar_graficos_local(), atualizar_graficos_ano()" class="search_main">
+<body onload="" class="search_main">
     <div class="button_line">
         <div id="left" class="left">
             <a href="index.html"><img class="logo" src="img\Logo v2.png" alt="logo"><a href="Home.html"></a>
@@ -33,9 +33,6 @@
         <main class="movie_box" id="movie_box">
             <div class="dashboard center">
                 <div id="kpi" class="kpi">
-                    Valor Total: R$100.00 <br>
-                    Total de Filmes na coleção: 250 <br>
-                    Média de preço por filme: R$5.00
                 </div>
                 <div class="pie_graphs center">
                     <div class="center gap">
@@ -62,6 +59,11 @@
     <!-- <button onclick="buscar()">Procurar o Filme</button><br><br> -->
 </body>
 <script>
+    let genero_comum = '';
+    let origem_comum = '';
+    let ano_comum = '';
+    let atualizou = false;
+
     function atualizar_graficos_genero() {
         let dados_genre = {
             labels: [],
@@ -90,6 +92,7 @@
                     resposta.json().then(json => {
                         let cor = [226, 161, 193];
                         const diff = 30;
+                        genero_comum = json[0].genero + " (" + json[0].total + ")";
 
                         for (let i = 0; i < json.length; i++) {
                             let cor1 = `rgb(${cor[0]}, ${cor[1]}, ${cor[2]})`
@@ -133,6 +136,7 @@
                             config
                         )
 
+                        atualizar_kpi_comum()
                         myChart.update();
                     })
                 }
@@ -167,6 +171,8 @@
                     resposta.json().then(json => {
                         let cor = [149, 138, 112];
                         const diff = 30;
+
+                        origem_comum = json[0].local + " (" + json[0].quantidade_local + ")";
 
                         for (let i = 0; i < json.length; i++) {
                             let cor1 = `rgb(${cor[0]}, ${cor[1]}, ${cor[2]})`
@@ -208,6 +214,7 @@
                             config
                         )
 
+                        atualizar_kpi_comum()
                         myChart.update();
                     })
                 }
@@ -244,6 +251,8 @@
                         // Mudança de cor dinâmica
                         let cor = [141, 203, 188];
                         const diff = 30;
+
+                        ano_comum = json[0].ano + " (" + json[0].quantidade_ano + ")";
 
                         for (let i = 0; i < json.length; i++) {
                             let cor1 = `rgb(${cor[0]}, ${cor[1]}, ${cor[2]})`
@@ -287,6 +296,7 @@
                             config
                         )
 
+                        atualizar_kpi_comum()
                         myChart.update();
                     })
                 }
@@ -294,10 +304,12 @@
             )
     }
 
-    function atualizar_kpis() {
+    async function atualizar_kpis() {
         let kpi = document.getElementById("kpi")
 
-        fetch("/dados/kpi", {
+
+
+        await fetch("/dados/kpi", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -314,12 +326,26 @@
                         let quantidade_total = Number(json[0].quantidade_total)
                         let valor_total = Number(json[0].valor_total);
 
-                        kpi.innerHTML = `<div class="kpi_total"> <b> Valor Total da Coleção: </b> R$${valor_total.toFixed(2)} <br>
-                    <b> Quantidade de Filmes: </b> ${quantidade_total} <br>
-                    <b> Média de preço por filme: </b> R$${valor_medio.toFixed(2)} </div>`
+                        
+
+                        kpi.innerHTML = `
+                        <label> Bem vindo, ${sessionStorage.NOME_USUARIO} </label>
+                        <div class="kpi_total"> <b> Gênero mais comum: </b> ${genero_comum} <br>
+                        <b> Origem mais comum: </b> ${origem_comum} <br>
+                        <b> Ano de lançamento mais comum: </b> Anos ${ano_comum} </div>`
+                            kpi.innerHTML += `<div class="kpi_total"> <b> Valor Total da Coleção: </b> R$${valor_total.toFixed(2)} <br>
+                        <b> Quantidade de Filmes: </b> ${quantidade_total} <br>
+                        <b> Média de preço por filme: </b> R$${valor_medio.toFixed(2)} </div>`
                     })
                 }
             })
+    }
+
+    function atualizar_kpi_comum(){
+        if(genero_comum != '' && origem_comum != '' && ano_comum != ''){
+            atualizar_kpis()
+        }
+        
     }
 
     function atualizar_timeline() {
@@ -405,6 +431,9 @@
 
     atualizar_kpis()
     atualizar_timeline()
+    atualizar_graficos_ano();
+    atualizar_graficos_genero();
+    atualizar_graficos_local();
 
 
     if (validarSessaoAddFilm()) {
