@@ -314,9 +314,9 @@
                         let quantidade_total = Number(json[0].quantidade_total)
                         let valor_total = Number(json[0].valor_total);
 
-                        kpi.innerHTML = `<div class="kpi_total">Valor Total da Coleção: R$${valor_total.toFixed(2)} <br>
-                    Total de Filmes: ${quantidade_total} <br>
-                    Média de preço por filme: R$${valor_medio.toFixed(2)} </div>`
+                        kpi.innerHTML = `<div class="kpi_total"> <b> Valor Total da Coleção: </b> R$${valor_total.toFixed(2)} <br>
+                    <b> Quantidade de Filmes: </b> ${quantidade_total} <br>
+                    <b> Média de preço por filme: </b> R$${valor_medio.toFixed(2)} </div>`
                     })
                 }
             })
