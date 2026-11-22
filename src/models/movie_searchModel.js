@@ -18,7 +18,7 @@ function pesquisar(search) {
 
 function pesquisar_id(id, search) {
     var instrucaoSql = `
-        SELECT idFilme, path, titulo, filme.dt_lancamento, popularidade, regiao.regiao, midia.tipo AS 'midia', genero.nome_genero as genero FROM filme
+        SELECT idFilme, path, titulo, filme.dt_lancamento, popularidade, regiao.regiao, midia.tipo AS 'midia', genero.nome_genero as genero, dt_compra AS 'data', valor_compra  AS 'valor',  local_compra.local AS 'local' FROM filme
         JOIN filme_genero ON filme.idFilme = filme_genero.fk_filme
         JOIN genero ON genero.idGenero = filme_genero.fk_genero
         JOIN poster ON filme.idFilme = poster.fk_filme
@@ -26,6 +26,7 @@ function pesquisar_id(id, search) {
         JOIN regiao ON idRegiao = titulo.fk_regiao AND idRegiao = poster.fk_regiao
         JOIN compra ON compra.fk_filme = filme.idFilme
         JOIN colecao ON fk_colecao = colecao.idColecao
+        JOIN local_compra ON fk_local_compra = local_compra.id_local_compra
         JOIN midia ON fk_midia = midia.idMidia
         WHERE idColecao = '${id}' AND titulo.fk_regiao = 1 AND titulo like '%${search}%'
         ORDER BY popularidade DESC

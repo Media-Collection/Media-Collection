@@ -1,9 +1,29 @@
     const max_filmes = 14;
     var pag_num = 1;
     
+    
+    let titulos = [];
+    let data_lancamento = [];
+    let generos = [];
+    let id_filme = [];
+    let local  = [];
+    let midia = [];
+    let pos = 0;
+
     function search_id() {
         var search = ipt_filme.value;
         var id = sessionStorage.ID_USUARIO;
+
+        titulos = [];
+        data_lancamento = [];
+        genero = [];
+        id_filme = [];
+        valor = [];
+        dt_compra = [];
+        local = [];
+        midia = [];
+
+        pos = 0;
 
         fetch(`/movies/buscar/${id}`, {
             method: "POST",
@@ -30,15 +50,25 @@
                         console.log('Total de páginas: ', (max_pag));
                         console.log('Página atual: ', (pag_num));
                         console.log('Total de Resultados: ', (json.length))
-                        for (let i = (max_filmes * (pag_num) - max_filmes); i < (max_filmes * pag_num) && i <= json.length - 1; i++) {
-                            let data = json[i].dt_lancamento
-                            let genero = json[i].genero
+                        for (let i = (max_filmes * (pag_num) - max_filmes); i < (max_filmes * pag_num) && i <= json.length - 1; i++, pos++) {
+                            let data = new Date(json[i].dt_lancamento);
+                            let data_compra = new Date(json[i].data);
+                            let genero = json[i].genero;
+
+                            titulos.push(json[i].titulo);
+                            data_lancamento.push(data.toLocaleDateString("pt-BR"));
+                            generos.push(genero);
+                            id_filme.push(json[i].idFilme);
+                            valor.push(json[i].valor);
+                            dt_compra.push(data_compra.toLocaleDateString("pt-BR"));
+                            local.push(json[i].local);
+                            midia.push(json[i].midia);
 
                             //console.log(json[i].idFilme)
                             if(json[i].midia == 'DVD'){
-                                msg.innerHTML += `<div class="movie_div" id="${json[i].idFilme}"> <img class="poster" src="https://image.tmdb.org/t/p/original/${json[i].path}"> <label class="movie_title">${json[i].titulo}</label> <label class="year">(<b>${genero}</b> - ${data.slice(0, 4)})</label> </div>`
+                                msg.innerHTML += `<div class="movie_div" id="${pos}" onclick="exibir(this.id)"> <img class="poster" src="https://image.tmdb.org/t/p/original/${json[i].path}"> <label class="movie_title">${json[i].titulo}</label> <label class="year">(<b>${genero}</b> - ${data.getFullYear()})</label> </div>`
                             }else{
-                                 msg.innerHTML += `<div class="movie_div" id="${json[i].idFilme}"> <img class="poster_blue" src="https://image.tmdb.org/t/p/original/${json[i].path}"> <label class="movie_title">${json[i].titulo}</label> <label class="year">(<b>${genero}</b> - ${data.slice(0, 4)})</label> </div>`
+                                 msg.innerHTML += `<div class="movie_div" id="${pos}" onclick="exibir(this.id)"> <img class="poster_blue" src="https://image.tmdb.org/t/p/original/${json[i].path}"> <label class="movie_title">${json[i].titulo}</label> <label class="year">(<b>${genero}</b> - ${data.getFullYear()})</label> </div>`
                             }
                            
                         }
@@ -78,11 +108,6 @@
             })
     }
 
-    let titulos = [];
-    let data_lancamento = [];
-    let generos = [];
-    let id_filme = [];
-    let pos = 0;
     
     if(!sessionStorage.LAST_DATE_USUARIO || !sessionStorage.LAST_VALUE_USUARIO){
         sessionStorage.LAST_DATE_USUARIO = '2026-01-01';
@@ -123,15 +148,15 @@
                         let filmes = ``;
 
                         for (let i = (max_filmes * (pag_num) - max_filmes); i < (max_filmes * pag_num) && i <= json.length - 1; i++, pos++) {
-                            let data = json[i].dt_lancamento
+                            let data = new Date(json[i].dt_lancamento);
                             let genero = json[i].genero
                             
                             titulos.push(json[i].titulo);
-                            data_lancamento.push(data);
+                            data_lancamento.push(data.toLocaleDateString("pt-BR"));
                             generos.push(genero);
                             id_filme.push(json[i].idFilme);
 
-                            filmes += `<div class="movie_div" id="${pos}" onclick="exibir(this.id)" onmouseover="""> <img class="poster" src="https://image.tmdb.org/t/p/original/${json[i].path}"> <label class="movie_title">${(json[i].titulo)}</label> <label class="year">(<b>${genero}</b> - ${data.slice(0, 4)})</label> </div>`
+                            filmes += `<div class="movie_div" id="${pos}" onclick="exibir(this.id)" onmouseover="""> <img class="poster" src="https://image.tmdb.org/t/p/original/${json[i].path}"> <label class="movie_title">${(json[i].titulo)}</label> <label class="year">(<b>${genero}</b> - ${data.getFullYear()})</label> </div>`
                         }
                         msg.innerHTML = filmes;
 
