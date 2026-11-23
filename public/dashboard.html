@@ -400,11 +400,9 @@
                             let data = new Date(json[i].data)
                             if(data < date){
                                 total_antes = json[i].total;
-                                console.log("Total Antes: ", total_antes)
                             } 
                             else{
                                 total_depois = json[i].total;
-                                console.log("Total depois: ", total)
                             }
                             dados_timeline.labels.push(data.toLocaleDateString("pt-BR"))
                             dados_timeline.datasets[0].data.push(json[i].total)
