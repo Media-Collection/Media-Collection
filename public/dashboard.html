@@ -353,7 +353,7 @@
     }
 
     function atualizar_kpi_comum(){
-        if(genero_comum != '' && origem_comum != '' && ano_comum != '' && porcentual != ''){
+        if(genero_comum != '' && origem_comum != '' && ano_comum != ''){
             atualizar_kpis()
         }
         
@@ -400,18 +400,21 @@
                             let data = new Date(json[i].data)
                             if(data < date){
                                 total_antes = json[i].total;
-                                console.log("Total antes")
+                                console.log("Total Antes: ", total_antes)
                             } 
                             else{
                                 total_depois = json[i].total;
-                                console.log("Compra depois")
+                                console.log("Total depois: ", total)
                             }
                             dados_timeline.labels.push(data.toLocaleDateString("pt-BR"))
                             dados_timeline.datasets[0].data.push(json[i].total)
                         }
-
+                        
                         porcentual = ((total_depois - total_antes) / total_antes)*100;
 
+                        if(porcentual <= 0){
+                            porcentual = 0;
+                        }
 
                         const config = {
                             type: 'line',
