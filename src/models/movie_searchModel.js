@@ -8,7 +8,7 @@ function pesquisar(search) {
         JOIN poster ON filme.idFilme = poster.fk_filme
         JOIN titulo ON filme.idFilme = titulo.fk_filme
         JOIN regiao ON idRegiao = titulo.fk_regiao AND idRegiao = poster.fk_regiao
-        WHERE (titulo.fk_regiao = 1) AND titulo LIKE '%${search}%'
+        WHERE (titulo.fk_regiao = 2) AND titulo LIKE '%${search}%'
         ORDER BY popularidade DESC
         LIMIT 300;
     `;
@@ -28,7 +28,7 @@ function pesquisar_id(id, search) {
         JOIN colecao ON fk_colecao = colecao.idColecao
         JOIN local_compra ON fk_local_compra = local_compra.id_local_compra
         JOIN midia ON fk_midia = midia.idMidia
-        WHERE idColecao = '${id}' AND titulo.fk_regiao = 1 AND titulo like '%${search}%'
+        WHERE idColecao = '${id}' AND titulo.fk_regiao = 2 AND titulo like '%${search}%'
         ORDER BY popularidade DESC
         LIMIT 300;
     `;
