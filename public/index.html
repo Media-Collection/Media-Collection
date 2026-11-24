@@ -13,11 +13,49 @@
             <div class="subtitle"> Acompanhe sua coleção de mídias físicas.   Salve os itens que você deseja assistir e adquirir. </div>
         </div>
         <div class="image_reel">
-            <img src="img\Truman_cover2.png" alt="Truman Show">
+            <img class="cover" src="img/covers_dvd/Truman_cover.png" alt="Truman Show">
+            <img class="cover" src="img/covers_dvd/future_cover.png" alt="O Iluminado">
+            <img class="cover show" src="img/covers_dvd/scream_cover.png" alt="Pânico">
         </div>
+            <img id="dvd" class="dvd" src="img/Truman_dvd.png" alt="">
             <div class="buttonLine">
                 <a class="unselected" href="login.html">Entrar</a>
                 <a class="unselected" href="Create.html">Criar Conta</a>
                 <a class="unselected" href="Search.html">Navegar</a>
             </div>
 </html>
+
+<script>
+    const imagens = document.getElementsByClassName("cover");
+    const dvd = document.getElementById("dvd");
+    let id = 0;
+    
+    console.log(imagens)
+    function exibir(index){
+        if(index > 0){
+            imagens[index-1].classList.toggle('show');
+        }else{
+            imagens[imagens.length-1].classList.toggle('show');
+        }
+        
+        imagens[index].classList.toggle('show');
+
+        if(id == 0){
+            dvd.src = "img/covers_dvd/Truman_dvd.jpg"
+        }else if(id == 1){
+            dvd.src = "img/covers_dvd/Future_dvd.jpg"
+        }
+        else if (id == 2){
+            dvd.src = "img/covers_dvd/Scream_dvd.jpg"
+        }
+
+        if(id == imagens.length - 1){
+            id = 0
+        }else{
+            id += 1
+        }   
+    }
+
+    exibir(id)
+    setInterval(() => exibir(id), 5000);
+</script>
