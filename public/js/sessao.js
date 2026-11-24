@@ -7,7 +7,7 @@ function validarSessaoFilm() {
 
     if (email != null && nome != null) {
         buttons.innerHTML += 
-        '<a href="collection.html"><button class="collection attached_button">My Collection</button></a> <a href="dashboard.html"><button class="dash attached_button">Dashboard</button></a>';
+        '<a href="collection.html"><button class="collection attached_button">Coleção</button></a> <a href="dashboard.html"><button class="dash attached_button">Dashboard</button></a>';
     } else {
         console.log("não logado")
     }
@@ -21,7 +21,7 @@ function validarSessaoCollection() {
 
     if (email != null && nome != null) {
         buttons.innerHTML += 
-        '<a href="collection.html"><button class="collection selected attached_button">My Collection</button></a> <a href="dashboard.html"><button class="dash attached_button">Dashboard</button></a>';
+        '<a href="collection.html"><button class="collection selected attached_button">Coleção</button></a> <a href="dashboard.html"><button class="dash attached_button">Dashboard</button></a>';
     } else {
         window.location = "../login.html";
     }
