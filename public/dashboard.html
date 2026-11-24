@@ -31,7 +31,7 @@
     </div>
     <section class="center_column">
         <main class="movie_box" id="movie_box">
-            <div class="dashboard center">
+            <div class="dashboard center" id="dashboard">
                 <div id="kpi" class="kpi">
                 </div>
                 <div class="graphs center">
@@ -59,7 +59,7 @@
     <!-- <button onclick="buscar()">Procurar o Filme</button><br><br> -->
 </body>
 <script>
-    let porcentual = '';
+    let porcentual = 0;
     let genero_comum = '';
     let origem_comum = '';
     let ano_comum = '';
@@ -142,6 +142,8 @@
                         atualizar_kpi_comum()
                         myChart.update();
                     })
+                }else{
+                    dashboard.innerHTML = "<b class='kpi_total'> Insira Filmes na sua coleção para visualizar a dashboard </b>"
                 }
             })
     }
@@ -317,7 +319,6 @@
         let kpi = document.getElementById("kpi")
 
 
-
         await fetch("/dados/kpi", {
             method: "POST",
             headers: {
@@ -465,7 +466,7 @@
                         )
 
                         myChart.update();
-                        atualizar_kpi_comum()
+                        atualizar_kpi_comum();
                     })
                 }
             }
