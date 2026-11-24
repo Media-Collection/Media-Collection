@@ -278,7 +278,7 @@ button:hover{
     flex-direction: row;
 }
 
-.pie_graphs{
+.graphs{
     flex-direction: column;
     background-color: white;
     box-shadow: 5px 4px 14px rgba(0, 0, 0, 0.6);
@@ -286,7 +286,11 @@ button:hover{
     border: 2px solid black;
     padding: 5px 50px 5px 50px;
     gap: 30px;
-    margin: 15px;
+}
+
+.pie_graphs{
+    display: flex;
+    gap: 30px;
 }
 
 .graph_pie{
@@ -295,16 +299,13 @@ button:hover{
 
 .timeline{
     width: 90%;
+    height: 420px;
 }
 
-.gap{
-    gap: 30px;
-}
 
 .kpi{
     display: flex;
     flex-direction: column;
-    width: 30%;
     gap: 40px;
     font-size: 20px;
 }
@@ -329,7 +330,9 @@ button:hover{
 .dashboard{
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     justify-content: space-evenly;
+    padding: 20px;
 }
 
 .green{
@@ -364,6 +367,12 @@ button:hover{
         height: fit-content;
         min-width: none;
     }
+
+    .graphs{
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
 }
 
 @media (max-width: 1600px) {
@@ -396,6 +405,12 @@ button:hover{
 
     .collection{
         display: none;
+    }
+}
+
+@media (max-width: 980px) {
+    .pie_graphs{
+        flex-direction: column;
     }
 }
 

@@ -19,8 +19,8 @@
     <div class="button_line">
         <div id="left" class="left">
             <a href="index.html"><img class="logo" src="img\Logo v2.png" alt="logo"><a href="Home.html"></a>
-                <a href="Search.html"><button class="films attached_button">Filmes</button></a>
-                <a href="collection.html"><button class="collection attached_button">Coleção</button></a>
+                <a href="Search.html"><button class="films attached_button">Films</button></a>
+                <a href="collection.html"><button class="collection attached_button">My Collection</button></a>
                 <a href="dashboard.html"><button class="selected dash attached_button">Dashboard</button></a>
         </div>
         <div id="right" class="right">
@@ -32,11 +32,10 @@
     <section class="center_column">
         <main class="movie_box" id="movie_box">
             <div class="dashboard center">
-                
                 <div id="kpi" class="kpi">
                 </div>
-                <div class="pie_graphs center">
-                    <div class="center gap">
+                <div class="graphs center">
+                    <div class="pie_graphs">
                         <div class="graph_pie">
                             <canvas id="genre_pie"></canvas>
                         </div>
@@ -339,11 +338,12 @@
                         
 
                         kpi.innerHTML = `
-                        <label> Bem vindo, ${sessionStorage.NOME_USUARIO} </label>
+                        <label> Bem vindo, <br> ${sessionStorage.NOME_USUARIO} </label>
                         <div class="kpi_total"> <b> Gênero mais comum: </b> ${genero_comum} <br>
                         <b> Origem mais comum: </b> ${origem_comum} <br>
                         <b> Ano de lançamento mais comum: </b> Anos ${ano_comum} </div>`
-                            kpi.innerHTML += `<div class="kpi_total"> <b> Valor Total da Coleção: </b> R$${valor_total.toFixed(2)} <br>
+                        
+                        kpi.innerHTML += `<div class="kpi_total"> <b> Valor Total da Coleção: </b> R$${valor_total.toFixed(2)} <br>
                         <b> Quantidade de Filmes: </b> ${quantidade_total} <br>
                         <b> Média de preço por filme: </b> R$${valor_medio.toFixed(2)} <br>
                         <b> Aumento percentual nos últimos 30 dias: </b> <img src="img/icon.png" alt=""> <b class="green"> ${porcentual.toFixed(2)}%  </b>  </div>`
