@@ -18,14 +18,11 @@
     <div id="left" class="left">
       <a href="index.html"><img class="logo" src="img\Logo v2.png" alt="logo"><a href="Home.html"></a>
         <a href="Search.html"><button class="attached_button">Films</button></a>
-<!--         <a href="collection.html"><button class="attached_button">My Collection</button></a>
-        <button class="attached_button">Dashboard</button> -->
     </div>
     <div id="right" class="right">
       <a href="login.html"><button class="basic_button"> Sign in </button></a>
       <a href="Create.html"><button class="create_account"> Create Account </button></a>
     </div>
-    <!-- <input onkeyup="(event.key === 'Enter') ? buscar() : undefined;" type="text" id="ipt_filme"> -->
   </div>
   <section class="center">
     <main class="login_box center">
@@ -34,10 +31,10 @@
       </div>
       <div class="cadastro">
         <label>Join Collect Physical!</label>
-        <section> E-mail: <br><input type="email" id="ipt_email" placeholder="E-mail"> </section>
-        <section> Username: <br><input type="text" id="ipt_username" placeholder="Username"> </section>
-        <section> Password: <br><input type="password" id="ipt_password" placeholder="Password"> </section>
-        <section> Confirm Password: <br><input type="password" id="ipt_password2" placeholder="Confirm your Password">
+        <section> E-mail: <br><input oninput="validarCadastro()" type="email" id="ipt_email" placeholder="E-mail"> </section>
+        <section> Username: <br><input oninput="validarCadastro()" type="text" id="ipt_username" placeholder="Username"> </section>
+        <section> Password: <br><input oninput="validarSenha()" type="password" id="ipt_password" placeholder="Password"> </section>
+        <section> Confirm Password: <br><input oninput="validarSenha()" type="password" id="ipt_password2" placeholder="Confirm your Password">
         </section>
         <div class="erro" id="error_message"></div>
         <button class="signup" onclick="cadastrar()"> Create Account </button>
@@ -45,17 +42,18 @@
     </main>
   </section>
 
-  <!-- <button onclick="buscar()">Procurar o Filme</button><br><br> -->
 </body>
 <script>
+  var valido = true;
+
   function cadastrar() {
     var username = ipt_username.value;
     var email = ipt_email.value;
     var senha = ipt_password.value;
-    var confirmacao_senha = ipt_password2.value;
+    let confirmacao_senha = ipt_password2.value;
 
-    // Verificando se há algum campo em branco
-    if (
+    if(valido){
+      if (
       username == "" ||
       email == "" ||
       senha == "" ||
@@ -63,16 +61,8 @@
     ) {
       error_message.innerHTML =
         "Todos os valores devem ser preenchidos";
-
-      return false;
     }
-    else if(senha.length < 5){
-      error_message.innerHTML = "Senha deve conter pelo menos 5 dígitos"
-    }
-    else if(senha != confirmacao_senha){
-      error_message.innerHTML = "Senhas não coincidem"
-    }
-    else {
+    else{
       // Enviando o valor da nova input
       fetch("/usuarios/cadastrar", {
         method: "POST",
@@ -101,40 +91,50 @@
         })
         .catch(function (erro) {
           console.log(erro);
-          error_message.innerHTML = erro.message;
+          error_message.innerHTML += erro.message;
         });
+    }
     }
   }
 
-/*   function cadastrar_colecao(id) {
-    fetch("/usuarios/cadastrar_colecao", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        idServer: id
-      }),
-    })
+  function validarCadastro(){
+    let email = ipt_email.value;
+    let username =  ipt_username.value;
+    error_message.innerHTML = '';
 
-      .then(function (resposta) {
-        if (!resposta.ok) {
-          throw new Error("Erro ao cadastrar coleção!");
-        }
-        else {
+    
+    if(email.indexOf("@") <= 0 || email.indexOf(".com") <= 0 || email.indexOf("@") > email.indexOf(".com")){
+      error_message.innerHTML += "E-mail Inválido"
+      valido = false;
+    } 
 
-          error_message.innerHTML =
-            '<b class="sucesso"> Cadastro realizado com sucesso! Redirecionando para tela de Login... </b>';
-            
-          setTimeout(() => {
-            window.location = "login.html";
-          }, 2000);
-        }
-      })
-      .catch(function (erro) {
-        console.log(erro);
-      });
-  } */
+    else {
+      valido = true;
+  }
+}
+
+function validarSenha(){
+  let senha = ipt_password.value;
+  let confirmacao_senha = ipt_password2.value;
+  error_message.innerHTML = '';
+
+  if(senha.length < 5){
+      error_message.innerHTML = "Senha deve conter pelo menos 5 dígitos"
+      valido = false;
+  }
+
+  else if(senha != confirmacao_senha){
+      error_message.innerHTML = "Senhas não coincidem"
+      console.log(senha)
+      console.log(confirmacao_senha)
+      valido = false;
+  }
+
+  else{
+    error_message.innerHTML = ""
+    valido = true;
+  }
+}
 </script>
 
 </html>
