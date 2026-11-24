@@ -46,7 +46,7 @@ body{
     opacity: 0;
 
     transition-property: display opacity;
-    transition-duration: 1s;
+    transition-duration: 2s;
     transition-behavior: allow-discrete;
 }
 
