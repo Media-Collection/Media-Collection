@@ -19,7 +19,6 @@ router.post("/adicionar", function (req, res) {
 });
 
 router.post("/retirar", function (req, res) {
-    console.log("AAAAAAAA")
     movie_addController.remover(req, res);
 });
 
