@@ -8,8 +8,6 @@ function genre(req, res) {
     } else {
         dadosModel.genre(id)
             .then((resultado)  => {
-                    //console.log(`\nResultados encontrados: ${resultadoSearch.length}`);
-                    //console.log(`Resultados: ${JSON.stringify(resultadoSearch)}`); // transforma JSON em String
                     if (resultado.length == 0){
                         console.log('Sem filmes cadastrados')
                         res.status(403).send("Sem filmes");
@@ -37,8 +35,6 @@ function kpi(req, res){
     } else {
         dadosModel.kpi(id)
             .then((resultado)  => {
-                    //console.log(`\nResultados encontrados: ${resultadoSearch.length}`);
-                    //console.log(`Resultados: ${JSON.stringify(resultadoSearch)}`); // transforma JSON em String
                     if (resultado.length == 0){
                         console.log('Sem filmes cadastrados')
                         res.status(403).send("Sem filmes");
@@ -50,7 +46,6 @@ function kpi(req, res){
                 })
             .catch(
                 function (erro) {
-                    // console.log(erro);
                     console.log("\nHouve um erro ao pesquisar o genero dos filmes! Erro: ", erro.sqlMessage);
                     res.status(500).json(erro.sqlMessage);
                 }
@@ -66,8 +61,6 @@ function local_compra(req, res){
     } else {
         dadosModel.local_compra(id)
             .then((resultado)  => {
-                    //console.log(`\nResultados encontrados: ${resultadoSearch.length}`);
-                    //console.log(`Resultados: ${JSON.stringify(resultadoSearch)}`); // transforma JSON em String
                     if (resultado.length == 0){
                         console.log('Sem filmes cadastrados')
                         res.status(403).send("Sem filmes");
@@ -95,8 +88,6 @@ function ano(req, res){
     } else {
         dadosModel.ano(id)
             .then((resultado)  => {
-                    //console.log(`\nResultados encontrados: ${resultadoSearch.length}`);
-                    //console.log(`Resultados: ${JSON.stringify(resultadoSearch)}`); // transforma JSON em String
                     if (resultado.length == 0){
                         console.log('Sem filmes cadastrados')
                         res.status(403).send("Sem filmes");
@@ -124,8 +115,6 @@ function timeline(req, res){
     } else {
         dadosModel.timeline(id)
             .then((resultado)  => {
-                    //console.log(`\nResultados encontrados: ${resultadoSearch.length}`);
-                    //console.log(`Resultados: ${JSON.stringify(resultadoSearch)}`); // transforma JSON em String
                     if (resultado.length == 0){
                         console.log('Sem filmes cadastrados')
                         res.status(403).send("Sem filmes");

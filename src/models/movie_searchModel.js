@@ -12,7 +12,7 @@ function pesquisar(search) {
         ORDER BY popularidade DESC
         LIMIT 300;
     `;
-    // console.log("Executando a instrução SQL: \n" + instrucaoSql);
+
     return database.executar(instrucaoSql);
 }
 
@@ -32,7 +32,7 @@ function pesquisar_id(id, search) {
         ORDER BY popularidade DESC
         LIMIT 300;
     `;
-    // console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    
     return database.executar(instrucaoSql);
 }
 
