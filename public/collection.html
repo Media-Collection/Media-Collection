@@ -53,18 +53,23 @@
 
     function exibir(id) {
         let add_box = document.getElementById("add_box");
+        let date = new Date (resultado_filmes[pos].dt_lancamento);
+        let date_format = (date.toLocaleDateString("pt-BR"));
+
+        let buy_date = new Date (resultado_filmes[id].data);
+        let buy_date_format = (buy_date.toLocaleDateString("pt-BR"));
 
         if (add_box.style.display == "none") {
             add_box.style.display = "block";
 
             if (validarSessaoAddFilm()) {
                 add_box.innerHTML = `
-                    <b> Título: </b> ${titulos[id]} <br> <b> Data de Lançamento: </b> ${(data_lancamento[id])} </b> <br> <b> Gênero: </b> ${generos[id]} <br><br><br> 
-                    <b> Data de Compra: </b> ${dt_compra[id]} <br>
-                    <b> Valor da Compra: </b> R$${valor[id]} <br>
-                    <b> Local de Compra: </b> ${local[id]} <br>
-                    <b> Tipo de mídia: </b> ${midia[id]} <br><br>
-                    <button class="selected" onclick="remover(${id_filme[id]})"> Remover da coleção </button> `
+                    <b> Título: </b> ${resultado_filmes[id].titulo} <br> <b> Data de Lançamento: </b> ${(date_format)} </b> <br> <b> Gênero: </b> ${resultado_filmes[id].genero} <br><br><br> 
+                    <b> Data de Compra: </b> ${buy_date_format} <br>
+                    <b> Valor da Compra: </b> R$${resultado_filmes[id].valor} <br>
+                    <b> Local de Compra: </b> ${resultado_filmes[id].local} <br>
+                    <b> Tipo de mídia: </b> ${resultado_filmes[id].midia} <br><br>
+                    <button class="selected" onclick="remover(${resultado_filmes[id].idFilme})"> Remover da coleção </button> `
             } else {
                 add_box.innerHTML = `<b> Você precisa estar logado para visualizar os filmes da sua coleção! </b>`
             }
@@ -103,7 +108,6 @@
     fullscreen.addEventListener("change", (e) => {
         search_id()
     })
-
 </script>
 
 </html>

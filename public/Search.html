@@ -56,14 +56,16 @@
 
     function exibir(id) {
         let add_box = document.getElementById("add_box");
+        let date = new Date (resultado_filmes[id].dt_lancamento);
 
         if (add_box.style.display == "none") {
             add_box.style.display = "block";
 
             if (validarSessaoAddFilm()) {
                 add_box.innerHTML = `
-                    <b> Título:  ${titulos[id]} <br> Data de Lançamento:  ${(data_lancamento[id])} <br> Gênero:  ${generos[id]} <br><br></b> <br> 
-                    Data de Compra: <input type="date" id="ipt_data" min="2020-01-01" max="2027-12-31" value="${sessionStorage.LAST_DATE_USUARIO}"><br>
+                    <b> Título: </b> ${resultado_filmes[id].titulo} <br> <b> Data de Lançamento: </b> ${(date.toLocaleDateString("pt-BR"))} <br> 
+                    <b> Gênero:  </b> ${resultado_filmes[id].genero} <br><br><br> 
+                     Data de Compra: <input type="date" id="ipt_data" min="2020-01-01" max="2027-12-31" value="${sessionStorage.LAST_DATE_USUARIO}"><br>
                     Valor da Compra: <input type="number" id="ipt_valor" value="${sessionStorage.LAST_VALUE_USUARIO}"><br>
                     Local de Compra: <select name="" id="ipt_local">
                         <option value="1">Sebo</option>
@@ -79,7 +81,7 @@
                         <option value="4">4K UHD</option>
                         <option value="5">UMD</option>
                     </select><br><br>
-                    <button class="selected" onclick="registrar(${id_filme[id]})"> Adicionar à coleção </button> `
+                    <button class="selected" onclick="registrar(${resultado_filmes[id].idFilme})"> Adicionar à coleção </button> `
             } else {
                 add_box.innerHTML = `<b> Você precisa estar logado para adicionar filmes à sua coleção </b>`
             }
@@ -124,7 +126,7 @@
 
             .then((resposta) => {
                 if (resposta.ok) {
-                    alert(`Filme ${titulos[id_filme.indexOf(id)]} adicionado á coleção!`)
+                    alert(`Filme ${id} adicionado á coleção!`)
                     console.log("Filme adicionado!")
                     //last_local = local;
                     //last_midia = midia;
@@ -141,7 +143,7 @@
 
     function page_change(pag) {
         pag_num = Number(pag)
-        draw(id_filme.length);
+        draw(resultado_filmes.length);
     };
 
     let fullscreen = window.matchMedia("(display-mode: fullscreen)");

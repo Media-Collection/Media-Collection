@@ -1,14 +1,9 @@
 var max_filmes = 14;
 var pag_num = 1;
 
-
-let titulos = [];
-let data_lancamento = [];
-let generos = [];
-let id_filme = [];
-let local = [];
-let midia = [];
 let pos = 0;
+
+let resultado_filmes = '';
 
 let max_pag = 0;
 
@@ -23,19 +18,9 @@ function check_fullscreen() {
 
 function search_id() {
     check_fullscreen()
+    resultado_filmes = '';
     var search = ipt_filme.value;
     var id = sessionStorage.ID_USUARIO;
-
-    titulos = [];
-    data_lancamento = [];
-    ano_lancamento = [];
-    genero = [];
-    id_filme = [];
-    poster = [];
-    valor = [];
-    dt_compra = [];
-    local = [];
-    midia = [];
 
     pos = 0;
 
@@ -52,39 +37,24 @@ function search_id() {
 
         .then((resposta) => {
             if (resposta.ok) {
+                
                 resposta.json().then(json => {
                     console.log(json.length, max_filmes)
-                    let max_pag = Math.ceil(json.length / max_filmes)
+                    console.log(json)
+                    max_pag = Math.ceil(json.length / max_filmes)
 
                     if (max_pag == 0) {
                         max_pag = 1
                     }
 
                     msg.innerHTML = '';
+                    resultado_filmes = json;
 
-                    for (let i = (max_filmes * (pag_num) - max_filmes); i < (max_filmes * pag_num) && i <= json.length - 1; i++, pos++) {
-                        let data = new Date(json[i].dt_lancamento);
-                        let data_compra = new Date(json[i].data);
-                        let genero = json[i].genero;
-
-                        titulos.push(json[i].titulo);
-                        data_lancamento.push(data.toLocaleDateString("pt-BR"));
-                        generos.push(genero);
-                        id_filme.push(json[i].idFilme);
-                        valor.push(json[i].valor);
-                        dt_compra.push(data_compra.toLocaleDateString("pt-BR"));
-                        local.push(json[i].local);
-                        midia.push(json[i].midia);
-
-                        ano_lancamento.push(data.getFullYear());
-                        poster.push(json[i].path);
-                        
-
-                        draw(json.length);
-            }
+                    msg.innerHTML = '';
+                    resultado_filmes = json;
+                    draw_collection(json.length);
         })
-        }
-            else {
+        } else {
                 msg.innerHTML = `<div class="movie_div" id=""> <img class="poster"> <label class="movie_title">Nenhum filme encontrado...</label> <label class="year"></label> </div>`
                 page_button.innerHTML = `<button id="1" onclick="page_change(this.id)" class="selected"> 1 </button>`;
             }
@@ -98,14 +68,10 @@ if (!sessionStorage.LAST_DATE_USUARIO || !sessionStorage.LAST_VALUE_USUARIO) {
 }
 
 function search() {
+    resultado_filmes = '';
+
     check_fullscreen()
     var search = ipt_filme.value;
-    titulos = [];
-    data_lancamento = [];
-    ano_lancamento = [];
-    genero = [];
-    id_filme = [];
-    poster = [];
     pos = 0;
 
 
@@ -129,22 +95,8 @@ function search() {
                     }
 
                     msg.innerHTML = '';
-
-                    for (let i = 0; i <= json.length - 1; i++) {
-                        let data = new Date(json[i].dt_lancamento);
-                        let genero = json[i].genero
-
-                        titulos.push(json[i].titulo);
-                        data_lancamento.push(data.toLocaleDateString("pt-BR"));
-                        ano_lancamento.push(data.getFullYear());
-                        generos.push(genero);
-                        id_filme.push(json[i].idFilme);
-                        poster.push(json[i].path);
-                    }
-
+                    resultado_filmes = json;
                     draw(json.length);
-
-
                 })
             }else{
                 msg.innerHTML = `<div class="movie_div" id=""> <img class="poster"> <label class="movie_title">Nenhum filme encontrado...</label> <label class="year"></label> </div>`
@@ -162,7 +114,10 @@ function draw(length) {
 
 
     for (let pos = (pag_num - 1) * max_filmes; pos <= ((pag_num - 1) * max_filmes - 1) + max_filmes && pos < length; pos++) {
-        filmes += `<div class="movie_div" id="${pos}" onclick="exibir(this.id)" onmouseover="""> <img class="poster" src="https://image.tmdb.org/t/p/original/${poster[pos]}"> <label class="movie_title">${(titulos[pos])}</label> <label class="year">(<b>${generos[pos]}</b> - ${ano_lancamento[pos]})</label> </div>`
+        let date = new Date (resultado_filmes[pos].dt_lancamento);
+        let ano = date.getFullYear();
+
+        filmes += `<div class="movie_div" id="${pos}" onclick="exibir(this.id)" onmouseover="""> <img class="poster" src="https://image.tmdb.org/t/p/original/${resultado_filmes[pos].path}"> <label class="movie_title">${(resultado_filmes[pos].titulo)}</label> <label class="year">(<b>${resultado_filmes[pos].genero}</b> - ${ano})</label> </div>`
     }
 
     msg.innerHTML = filmes;
@@ -175,10 +130,12 @@ function draw_collection(length)  {
     let filmes = ``;
 
     for (let pos = (pag_num - 1) * max_filmes; pos <= ((pag_num - 1) * max_filmes - 1) + max_filmes && pos < length; pos++) {
-        if (midia[pos] == 'DVD') {
-            filmes += `<div class="movie_div" id="${pos}" onclick="exibir(this.id)"> <img class="poster" src="https://image.tmdb.org/t/p/original/${poster[pos]}"> <label class="movie_title">${titulos[pos]}</label> <label class="year">(<b>${generos[pos]}</b> - ${ano_lancamento[pos]})</label> </div>`
+        let date = new Date (resultado_filmes[pos].dt_lancamento);
+        let ano = date.getFullYear();
+        if (resultado_filmes[pos].midia == 'DVD') {
+            filmes += `<div class="movie_div" id="${pos}" onclick="exibir(this.id)"> <img class="poster" src="https://image.tmdb.org/t/p/original/${resultado_filmes[pos].path}"> <label class="movie_title">${resultado_filmes[pos].titulo}</label> <label class="year">(<b>${resultado_filmes[pos].genero}</b> - ${ano})</label> </div>`
         } else {
-            filmes += `<div class="movie_div" id="${pos}" onclick="exibir(this.id)"> <img class="poster_blue" src="https://image.tmdb.org/t/p/original/${poster[pos]}"> <label class="movie_title">${titulos[pos]}</label> <label class="year">(<b>${generos[pos]}</b> - ${ano_lancamento[pos]})</label> </div>`
+            filmes += `<div class="movie_div" id="${pos}" onclick="exibir(this.id)"> <img class="poster_blue" src="https://image.tmdb.org/t/p/original/${resultado_filmes[pos].path}"> <label class="movie_title">${resultado_filmes[pos].titulo}</label> <label class="year">(<b>${resultado_filmes[pos].genero}</b> - ${ano})</label> </div>`
         }        
     }
 
@@ -189,6 +146,7 @@ function draw_collection(length)  {
 function paginas() {
     let page_buttons = '';
     let count_button = 2;
+    console.log("PÁGINAS!!")
 
     if (pag_num > 2) {
         page_buttons += `<button id="1" onclick="page_change(this.id)" style="margin-right: 30px"> 1 </button>`
